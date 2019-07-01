@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdtu.yz.dao.AuthDao">
+    <!--  通过用户名查询用户的信息  -->
+    <select id="getUserByName" parameterType="java.lang.String" resultType="com.cdtu.yz.entity.User">
+        select * from user where username = #{username}
+    </select>
+
+    <!--  查询所有的用户信息  -->
+    <select id="getAuthAll" resultType="com.cdtu.yz.entity.Auth">
+        select * from auth
+    </select>
+
+</mapper>

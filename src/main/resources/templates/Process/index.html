@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <!--<base href="${pageContext.request.contextPath}/" />-->
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css"/>
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
+
+
+    <style type="text/css">
+        body {
+            padding-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+
+        .option-button:hover {
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+<form class="form-inline definewidth m20" action=""
+      method="get">
+    标题： <input type="text" name="param" id="param"
+               class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
+    <button type="button" class="btn btn-primary" id="search">查询</button>
+    &nbsp;&nbsp;
+    <button type="button" class="btn btn-success" id="addnew">新增路线</button>
+</form>
+<table class="table table-bordered table-hover definewidth m10">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>路线名称</th>
+        <th>创建时间</th>
+        <th>创建者</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <th:block th:each="process : ${processPage.data}">
+        <tr>
+            <td><th:block th:text="${process.id}"></th:block></td>
+            <td>
+                <th:block th:text="${process.id}"></th:block>
+            </td>
+            <td><th:block th:text="${process.createTime}"></th:block></td>
+            <td><th:block th:text="${process.creator}"></th:block></td>
+            <td>
+                <a class="option-button" th:href="@{'/process/edit/' + ${process.id}}">修改</a>
+                |
+                <a class="option-button" th:onclick="'javascript: delInfo('+ ${process.id} + ')'">删除</a>
+            </td>
+        </tr>
+    </th:block>
+</table>
+
+
+<!--//分页的实现-->
+<div class="inline pull-right page">
+    <th:block th:text="${processPage.totalCount}"></th:block>
+    条记录
+    <th:block th:text="${processPage.currPage}"></th:block>
+    /
+    <th:block th:text="${processPage.totalPage}"></th:block>
+    页
+    <a href='/process/list/1'>首页</a>
+
+    <th:block th:if="${null != processPage}">
+        <span th:class="${processPage.currPage==1}?'disabled' : ''">
+            <a th:href="@{${processPage.currPage==1}?'##':'/process/list/' + ${processPage.currPage-1}}">&laquo;</a>
+        </span>
+        <span th:if="${processPage.currPage-3 >=1}"><a
+                th:href="@{'/process/list/' + ${processPage.currPage-3}}"
+                th:text="${processPage.currPage -3}">1</a></span>
+        <span th:if="${processPage.currPage-2 >=1}"><a
+                th:href="@{'/process/list/' + ${processPage.currPage-2}}"
+                th:text="${processPage.currPage -2}">1</a></span>
+        <span th:if="${processPage.currPage-1 >=1}"><a
+                th:href="@{'/process/list/' + ${processPage.currPage-1}}"
+                th:text="${processPage.currPage -1}">1</a></span>
+        <span class="active"><a href="#" th:text="${processPage.currPage}">1</a></span>
+        <span th:if="${processPage.currPage+1 <=processPage.totalPage}"><a
+                th:href="@{'/process/list/' + ${processPage.currPage+1}}"
+                th:text="${processPage.currPage +1}">1</a></span>
+        <span th:if="${processPage.currPage+2 <=processPage.totalPage}"><a
+                th:href="@{'/process/list/' + ${processPage.currPage+2}}"
+                th:text="${processPage.currPage +2}">1</a></span>
+        <span th:if="${processPage.currPage+3 <=processPage.totalPage}"><a
+                th:href="@{'/process/list/' + ${processPage.currPage+3}}"
+                th:text="${processPage.currPage +3}">1</a></span>
+        <span th:class="${processPage.currPage==processPage.totalPage}?'disabled' : ''"><a
+                th:href="@{${processPage.currPage==processPage.totalPage}?'##' : '/process/list/' + ${processPage.currPage+1}}">&raquo;</a>
+                </span>
+    </th:block>
+    <a th:href="@{'/process/list/' +${processPage.totalPage}}">尾页</a>
+
+
+</div>
+</body>
+</html>
+<script>
+    $('#addnew').click(function () {
+        window.location.href = '/process/toAddProcess'
+    });
+
+</script>
+<script type="text/javascript">
+    // 点击查询
+    $('#search').click(function () {
+        var param = $('#param').val();
+        if (param != "") {
+            window.location.href = '/process/search?param=' + param
+        }else {
+            alert("请输入用户名！");
+            $('#param').focus;
+        }
+
+    });
+
+
+    //点击删除
+    function delInfo(id) {
+
+        //利用对话框返回的值 （true 或者 false）
+        if (confirm("您将删除编号为：" + id + "的管理员，确认删除？")) {
+            $.ajax({
+                type: "get",
+                url: "/process/del",
+                data: { "id": id },
+                success: function (data) {
+                    if (data == "success") {
+                        alert('删除成功！');
+                        window.location.href = '/process/list/1'
+                    }else {
+                        alert('删除失败！');
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                },
+                complete: function () {
+
+                }
+            });
+        }
+
+    }
+</script>

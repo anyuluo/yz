@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdtu.yz.dao.ProcessDao">
+
+    <!--  添加援藏路线流程信息  -->
+    <insert id="addProcess" parameterType="com.cdtu.yz.entity.Process">
+        insert into process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="processName != null">
+                processName,
+            </if>
+            <if test="schoolName != null">
+                schoolName,
+            </if>
+            <if test="detail != null">
+                detail,
+            </if>
+
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="reserve != null">
+                reserve,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="processName != null">
+                #{processName},
+            </if>
+            <if test="schoolName != null">
+                #{schoolName},
+            </if>
+            <if test="detail != null">
+                #{detail},
+            </if><if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="creator != null">
+                #{creator},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="reserve != null">
+                #{reserve},
+            </if>
+        </trim>
+    </insert>
+
+    <!--&lt;!&ndash;  通过参数查询政策的相关信息  &ndash;&gt;-->
+    <!--<select id="getPolicysByParam" parameterType="java.lang.String" resultType="com.cdtu.yz.entity.Policy">-->
+        <!--select * from policy where title like concat('%', #{param}, '%')-->
+    <!--</select>-->
+
+    <!--  通过政策id查询政策的信息  -->
+    <select id="getProcessById" parameterType="java.lang.Integer" resultType="com.cdtu.yz.entity.Process">
+        select * from process where id= #{id}
+    </select>
+
+    <!--&lt;!&ndash;  查询所有的用户信息  &ndash;&gt;-->
+    <!--<select id="getUserAll" resultType="com.cdtu.yz.entity.User">-->
+        <!--select * from user-->
+    <!--</select>-->
+
+    <!--  查询用户数据的总条数  -->
+    <select id="getProcessCount" resultType="int">
+        select count(*) from process
+    </select>
+
+    <!--  -->
+    <select id="getProcessPage" parameterType="com.cdtu.yz.common.PageUtil" resultType="com.cdtu.yz.entity.Process">
+        select * from process limit #{start}, #{pageSize}
+    </select>
+
+    <!--&lt;!&ndash;  修改用户信息  &ndash;&gt;-->
+    <!--<update id="editPolicy" parameterType="com.cdtu.yz.entity.Policy">-->
+        <!--update policy set-->
+        <!--<trim prefix="" suffix="where id = #{id}" suffixOverrides=",">-->
+            <!--<if test="title != null">-->
+                <!--title=#{title},-->
+            <!--</if>-->
+            <!--<if test="editor != null">-->
+                <!--editor=#{editor},-->
+            <!--</if>-->
+            <!--<if test="content != null">-->
+                <!--content=#{content},-->
+            <!--</if>-->
+            <!--<if test="filePath != null">-->
+                <!--filePath=#{filePath},-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--createTime=#{createTime},-->
+            <!--</if>-->
+            <!--<if test="count != null">-->
+                <!--count=#{count},-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--status=#{status},-->
+            <!--</if>-->
+            <!--<if test="reserve != null">-->
+                <!--reserve=#{reserve},-->
+            <!--</if>-->
+        <!--</trim>-->
+    <!--</update>-->
+
+    <!---->
+    <!--&lt;!&ndash;  删除用户 &ndash;&gt;-->
+    <!--&lt;!&ndash;并不真实的删除数据，将原表中的数据放到user_del表中， 在删除原来的数据&ndash;&gt;-->
+    <!--<delete id="delUser" parameterType="com.cdtu.yz.entity.User">-->
+        <!--delete from user where id = #{id}-->
+    <!--</delete>-->
+
+    <!--&lt;!&ndash;  添加删除的用户信息  &ndash;&gt;-->
+    <!--<insert id="insertDel" parameterType="com.cdtu.yz.entity.User">-->
+        <!--insert into user_del-->
+        <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+            <!--<if test="userName != null">-->
+                <!--userName,-->
+            <!--</if>-->
+            <!--<if test="password != null">-->
+                <!--password,-->
+            <!--</if>-->
+            <!--<if test="sex != null">-->
+                <!--sex,-->
+            <!--</if>-->
+            <!--<if test="tel != null">-->
+                <!--tel,-->
+            <!--</if>-->
+            <!--<if test="qq != null">-->
+                <!--qq,-->
+            <!--</if>-->
+            <!--<if test="email != null">-->
+                <!--email,-->
+            <!--</if>-->
+            <!--<if test="schoolId != null">-->
+                <!--schoolId,-->
+            <!--</if>-->
+            <!--<if test="schoolName != null">-->
+                <!--schoolName,-->
+            <!--</if>-->
+            <!--<if test="role != null">-->
+                <!--role,-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--createTime,-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--creator,-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--status,-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--reserve,-->
+            <!--</if>-->
+        <!--</trim>-->
+        <!--<trim prefix="values (" suffix=")" suffixOverrides=",">-->
+            <!--<if test="userName != null">-->
+                <!--#{userName},-->
+            <!--</if>-->
+            <!--<if test="password != null">-->
+                <!--#{password},-->
+            <!--</if>-->
+            <!--<if test="sex != null">-->
+                <!--#{sex},-->
+            <!--</if>-->
+            <!--<if test="tel != null">-->
+                <!--#{tel},-->
+            <!--</if>-->
+            <!--<if test="qq != null">-->
+                <!--#{qq},-->
+            <!--</if>-->
+            <!--<if test="email != null">-->
+                <!--#{email},-->
+            <!--</if>-->
+            <!--<if test="schoolId != null">-->
+                <!--#{schoolId},-->
+            <!--</if>-->
+            <!--<if test="schoolName != null">-->
+                <!--#{schoolName},-->
+            <!--</if>-->
+            <!--<if test="role != null">-->
+                <!--#{role},-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--#{createTime},-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--#{creator},-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--#{status},-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--#{reserve},-->
+            <!--</if>-->
+        <!--</trim>-->
+    <!--</insert>-->
+
+</mapper>

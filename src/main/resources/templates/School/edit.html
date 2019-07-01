@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!--<base href="${pageContext.request.contextPath}/" />-->
+    <title></title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css" />
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
+    <!--<script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>-->
+    <!--<script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"></script>-->
+    <!--<script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>-->
+
+    <!--  markdown  -->
+    <link rel="stylesheet" href="/static/editor/css/style.css" />
+    <link rel="stylesheet" href="/static/editor/css/editormd.css" />
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+    <script src="/static/editor/js/jquery.min.js"></script>
+    <script src="/static/editor/js/editormd.min.js"></script>
+
+    <script src="/static/editor/lib/marked.min.js"></script>
+    <script src="/static/editor/lib/prettify.min.js"></script>
+    <script src="/static/editor/lib/raphael.min.js"></script>
+    <script src="/static/editor/lib/underscore.min.js"></script>
+    <script src="/static/editor/lib/sequence-diagram.min.js"></script>
+    <script src="/static/editor/lib/flowchart.min.js"></script>
+    <script src="/static/editor/lib/jquery.flowchart.min.js"></script>
+
+
+
+    <style type="text/css">
+        body {
+            padding-bottom: 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<form action="" method="post" class="definewidth m20" id="edit-school" name="edit-school">
+    <table class="table table-bordered table-hover ">
+        <tr>
+            <td width="10%" class="tableleft">学校编号</td>
+            <td>
+                <th:block th:if="${school != null}">
+                    <input type="text" id="id" name="id" th:value="${school.id}" readonly="readonly"/>
+                </th:block>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableleft">学校名称</td>
+            <td ><input type="text" id="schoolName" name="schoolName" th:value="${school.schoolName}"/>
+                <div style="display: none; color: red" id="message">高校已存在已存在！</div></td>
+        </tr>
+        <tr>
+            <td class="tableleft">需要援助</td>
+            <td >
+                <input type="radio" value="1" name="isNeed" th:attr ="checked=${school.isNeed == '1'?true:false}"/> 是
+                <input type="radio" value="0" name="isNeed" th:attr ="checked=${school.isNeed == '0'?true:false}"/> 否
+            </td>
+        </tr>
+        <tr>
+            <td class="tableleft">前往援助</td>
+            <td >
+                <input type="radio" value="1" name="isGo" th:attr ="checked=${school.isGo == '1'?true:false}"/> 是
+                <input type="radio" value="0" name="isGo" th:attr ="checked=${school.isGo == '0'?true:false}"/> 否
+            </td>
+        </tr>
+        <tr>
+            <td class="tableleft">学校简介</td>
+            <td>
+                <!--<div>-->
+                    <!--<textarea rows="5" cols="5"></textarea>-->
+                <!--</div>-->
+                <!--  此处添加详细信息富文本编辑器  -->
+                <div id="profile-editormd">
+                    <textarea class="editormd-markdown-textarea"  name="profile" style="display: none;"><th:block th:text="${school.profile}"></th:block></textarea>
+                    <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                    <textarea id="profile" class="editormd-html-textarea"></textarea>
+                </div>
+            </td>
+        </tr>e
+        <tr>
+            <td class="tableleft">援藏历史</td>
+            <td>
+                <!--<textarea rows="5" cols="5"></textarea>-->
+                <!--  此处添加历史信息富文本编辑器  -->
+                <div id="history-editormd">
+                    <textarea class="editormd-markdown-textarea"   name="history" ><th:block th:text="${school.history}"></th:block></textarea>
+                    <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                    <textarea id="history" class="editormd-html-textarea"></textarea>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableleft"></td>
+            <td>
+                <button type="button" id="save" class="btn btn-primary" onclick="submitEdit()" style="background-color: #006dcc">保存</button> &nbsp;&nbsp;
+                <button type="button" class="btn btn-success" name="backid" id="backid"  style="background-color: #5bb75b">返回列表</button>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script type="text/javascript">
+
+    //  高校简介markdown编辑器
+    var profile;
+
+    $(function() {
+        profile = editormd("profile-editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: "/static/editor/lib/"
+            // saveHTMLToTextarea: true
+        });
+
+    });
+
+    // // 数据回显
+    // $(function() {
+    //     profile = editormd.markdownToHTML("profile-editormd", {
+    //         // width   : "90%",
+    //         // height  : 640,
+    //         // syncScrolling : "single",
+    //         // path    : "/static/editor/lib/",
+    //         //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
+    //         // saveHTMLToTextarea: true,
+    //     //    htmlDecode : "style,script,iframe",
+    //
+    //         // emoji : true,
+    //         // taskList : true,
+    //         // tex : true, // 默认不解析
+    //         // flowChart : true, // 默认不解析
+    //         // sequenceDiagram : true, // 默认不解析
+    //         // codeFold : true
+    //
+    //
+    //
+    //         // /**下述为新增，上面一行记得加逗号结束*/
+    //         // /*指定需要显示的功能按钮*/
+    //         // toolbarIcons : function() {
+    //         //     return ["undo", "redo", "|","bold", "italic","ucwords","uppercase","lowercase","|","h1","h2","h3","h4","h5","h6","|","list-ul","list-ol","table","datetime","hr",  "||",  "watch", "fullscreen", "preview", "releaseIcon", "index"]
+    //         // },
+    //         //
+    //         // /*自定义功能按钮，下面我自定义了2个，一个是发布，一个是返回首页*/
+    //         // toolbarIconTexts : {
+    //         //     releaseIcon : "<span bgcolor=\"gray\">发布</span>",
+    //         //     index : "<span bgcolor=\"red\">返回首页</span>",
+    //         // },
+    //         //
+    //         // /*给自定义按钮指定回调函数*/
+    //         // toolbarHandlers:{
+    //         //     releaseIcon : function(cm, icon, cursor, selection) {
+    //         //         contentCommit();//提交表单代码在下面
+    //         //     },
+    //         //     index : function(){
+    //         //         window.location.href = '返回首页的路径.html';
+    //         //     },
+    //         // }
+    //     });
+    //
+    //     /*
+    //     // or
+    //     testEditor = editormd({
+    //         id      : "test-editormd",
+    //         width   : "90%",
+    //         height  : 640,
+    //         path    : "../lib/"
+    //     });
+    //     */
+    //
+    // });
+    //  援藏历史markdown编辑器
+    var history;
+    $(function() {
+        history = editormd("history-editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: "/static/editor/lib/"
+        });
+
+    });
+
+    // 返回列表页
+    $(function () {
+        $("#backid").click(function () {
+            window.location.href = '/school/list/1'
+        })
+    });
+
+
+    // //ajax请求后端判断锁添加的高校是否已近存在
+    // $(function () {
+    //     // 失焦触发
+    //     $('#schoolName').blur(function () {
+    //         var schoolName = $('#schoolName').val();  // 获取高校名称
+    //         if(schoolName){
+    //             $.ajax({
+    //                 url:'/school/exist',
+    //                 type:'get',
+    //                 data:{
+    //                     schoolName:schoolName
+    //                 },
+    //                 success:function (message) {
+    //                     if (message == 'true'){
+    //                         $('#message').show();
+    //                         $("#submit-button").attr('disabled',true);
+    //
+    //                     }
+    //                     else if (message == 'false'){
+    //                         $('#message').hide();
+    //                         $("#submit-button").attr('disabled',false);
+    //                         $('#submit-button').attr("type","submit");
+    //                     }
+    //                 }
+    //             })
+    //         }
+    //     })
+    // });
+
+
+
+    // Ajax提交表单
+    function submitEdit() {
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            //dataType: "json",//预期服务器返回的数据类型
+            url: "/school/edit-school", //url
+            data: $('#edit-school').serialize(),
+            success: function (result) {
+                console.log(result);//打印服务端返回的数据(调试用)
+                if (result == 'true') {
+                    alert("保存成功！");
+                }
+            },
+            error : function() {
+                alert("网络异常！");
+            }
+        });
+    }
+</script>
+
+</html>

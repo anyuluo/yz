@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>援藏路线新增</title>
+    <!--<base href="${pageContext.request.contextPath }/"/>-->
+
+
+    <link rel="stylesheet" type="text/css" href="/static/process/style.css"/>
+    <script type="text/javascript" src="/static/process/create.js"></script>
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+</head>
+<body>
+<div>
+    路线名称：
+    <input type="text" id="processName" name="processName" value=""/>
+    <br/>
+    <input id="name" placeholder="点击流程节点可以删除"/>
+    <input type="button" name="detail" value="增加" onclick="add();"/>
+    <input type="button" id="submit" value="提交"/>
+</div>
+</body>
+<script type="text/javascript">
+    // ajax提交数据
+    $('#submit').click(function () {
+        if (!$('#processName').val()) {
+            alert("请输入路线名称！");
+        }
+
+        var detail = "";//声明一个新的变量
+        var list1 = $(".roundedRectangle > p").each(function (index, element) {//遍历每个对象
+            detail = detail + $(this).text() + "-"; //字符串连接
+        });
+
+        // var form = new FormData(document.getElementById("policy"));
+        $.ajax({
+            url: "/process/add-process",
+            type: "post",
+            data: {
+                processName: $('#processName').val(),
+                detail: detail
+            },
+            success: function (data) {
+                if (data == "success") {
+                    alert("保存成功！")
+                } else {
+                    alert("保存失败！")
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    })
+</script>
+</html>

@@ -1,0 +1,26 @@
+
+<!DOCTYPE HTML>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>援藏路线修改</title>
+    <base href="${pageContext.request.contextPath }/"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="/static/process/style.css" />
+    <script type="text/javascript" src="/static/process/create.js"></script>
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+</head>
+<body>
+<div>
+    路线名称：
+    <input type="text" id="processName" th:value="${process.processName}"/>
+    <br />
+    <input value="" id="name" placeholder="点解流程节点可以删除" />
+    <input type="button" value="增加" onclick="add();" />
+    <input type="button" value="提交"/>
+</div>
+</body>
+<script type="text/javascript">
+
+
+</script>
+</html>

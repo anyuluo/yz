@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!--<base href="${pageContext.request.contextPath}/" />-->
+    <title></title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css"/>
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
+
+    <style type="text/css">
+        body {
+            padding-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media ( max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+
+        .option-button:hover {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<form class="form-inline definewidth m20" action=""
+      method="get">
+    标题： <input type="text" name="param" id="param"
+               class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
+    <button type="button" class="btn btn-primary" id="search">查询</button>
+    &nbsp;&nbsp;
+    <button type="button" class="btn btn-success" id="addnew">发布政策</button>
+</form>
+<table class="table table-bordered table-hover definewidth m10">
+    <thead>
+    <tr>
+        <th>编号</th>
+        <th>标题</th>
+        <th>最后更新时间</th>
+        <th>发布者</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <th:block th:each="policy : ${policyPage.data}">
+        <tr>
+            <td><th:block th:text="${policy.id}"></th:block></td>
+            <td style="max-width: 260px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                <a title="点击下载文件" th:href="@{'/policy/policyFile?fileName=' + ${policy.filePath}}"><th:block th:text="${policy.title}"></th:block></a>
+            </td>
+            <td><th:block th:text="${policy.createTime}"></th:block></td>
+            <td><th:block th:text="${policy.editor}"></th:block></td>
+            <td>
+                <a class="option-button" th:href="@{'/policy/to-edit/' + ${policy.id}}">编辑</a>
+                |<a class="option-button" th:onclick="'javascript: delInfo('+ ${policy.id} + ')'">删除</a>
+                |<a class="option-button" th:href="@{'/policy/show/' + ${policy.id}}">查看</a>
+            </td>
+        </tr>
+    </th:block>
+</table>
+
+
+<!--//分页的实现-->
+<div class="inline pull-right page">
+    <th:block th:text="${policyPage.totalCount}"></th:block>
+    条记录
+    <th:block th:text="${policyPage.currPage}"></th:block>
+    /
+    <th:block th:text="${policyPage.totalPage}"></th:block>
+    页
+    <a href='/policy/list/1'>首页</a>
+    <!--<a href='#'>上一页</a>-->
+    <!--<a href='#'>下一页</a>-->
+    <!--<a href='#'>尾页</a>-->
+
+    <th:block th:if="${null != policyPage}">
+        <span th:class="${policyPage.currPage==1}?'disabled' : ''">
+            <a th:href="@{${policyPage.currPage==1}?'##':'/policy/list/' + ${policyPage.currPage-1}}">&laquo;</a>
+        </span>
+        <span th:if="${policyPage.currPage-3 >=1}"><a
+                th:href="@{'/policy/list/' + ${policyPage.currPage-3}}"
+                th:text="${policyPage.currPage -3}">1</a></span>
+        <span th:if="${policyPage.currPage-2 >=1}"><a
+                th:href="@{'/policy/list/' + ${policyPage.currPage-2}}"
+                th:text="${policyPage.currPage -2}">1</a></span>
+        <span th:if="${policyPage.currPage-1 >=1}"><a
+                th:href="@{'/policy/list/' + ${policyPage.currPage-1}}"
+                th:text="${policyPage.currPage -1}">1</a></span>
+        <span class="active"><a href="#" th:text="${policyPage.currPage}">1</a></span>
+        <span th:if="${policyPage.currPage+1 <=policyPage.totalPage}"><a
+                th:href="@{'/policy/list/' + ${policyPage.currPage+1}}"
+                th:text="${policyPage.currPage +1}">1</a></span>
+        <span th:if="${policyPage.currPage+2 <=policyPage.totalPage}"><a
+                th:href="@{'/policy/list/' + ${policyPage.currPage+2}}"
+                th:text="${policyPage.currPage +2}">1</a></span>
+        <span th:if="${policyPage.currPage+3 <=policyPage.totalPage}"><a
+                th:href="@{'/policy/list/' + ${policyPage.currPage+3}}"
+                th:text="${policyPage.currPage +3}">1</a></span>
+        <span th:class="${policyPage.currPage==policyPage.totalPage}?'disabled' : ''"><a
+                th:href="@{${policyPage.currPage==policyPage.totalPage}?'##' : '/policy/list/' + ${policyPage.currPage+1}}">&raquo;</a>
+                </span>
+    </th:block>
+    <a th:href="@{'/policy/list/' +${policyPage.totalPage}}">尾页</a>
+</div>
+
+
+</body>
+<script>
+    // 发布新政策
+    $('#addnew').click(function () {
+        window.location.href = '/policy/to-add'
+
+    });
+
+    // 点击查询
+    $('#search').click(function () {
+        var param = $('#param').val();
+        if (param != "") {
+            window.location.href = '/policy/search?param=' + param
+        }else {
+            alert("请输入查询内容！");
+            $('#param').focus;
+        }
+
+    });
+</script>
+</html>

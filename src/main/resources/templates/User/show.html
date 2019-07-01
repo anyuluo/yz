@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base href="${pageContext.request.contextPath}/"/>
+    <title></title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css"/>
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
+
+    <style type="text/css">
+        body {
+            padding-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<form action="" method="post" class="definewidth m20">
+    <table class="table table-bordered table-hover ">
+        <th:block th:if="${user != null}">
+            <tr>
+                <td width="10%" class="tableleft">管理员编号</td>
+                <td>
+                    <th:block th:text="${user.id}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">管理员名称</td>
+                <td>
+                    <th:block th:text="${user.userName}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">所属学校</td>
+                <td>
+                    <th:block th:text="${user.schoolName}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">电话</td>
+                <td>
+                    <th:block th:text="${user.tel}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">级别</td>
+                <td>
+                    <th:block th:text="${user.role}"></th:block>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">创建时间</td>
+                <td>
+                    <th:block th:text="${user.createTime}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">创建者</td>
+                <td>
+                    <th:block th:text="${user.creator}"></th:block>
+                </td>
+            </tr>
+        </th:block>
+        <th:block th:if="${message != null}">
+            <td style="color: red">
+                用户 <th:block th:text="${message}"></th:block> 不存在！
+            </td>
+
+            <input type="hidden" id="message" th:value="${message}">
+            <!--<script>-->
+            <!--// 页面加载完以后执行js代码-->
+            <!--$(function () {-->
+            <!--$("table tr:nth-child(even)").addClass("even");-->
+            <!--var message = $('#message').val();-->
+            <!--if (message != '') {-->
+
+            <!--alert(message)-->
+            <!--}-->
+            <!--})-->
+            <!--</script>-->
+        </th:block>
+            <tr>
+                <td class="tableleft"></td>
+                <td>
+                    <button type="button" class="btn btn-success" name="backid" id="backid">返回列表</button>
+                </td>
+            </tr>
+
+    </table>
+</form>
+
+</body>
+<script type="text/javascript">
+
+    $(function () {
+        $("#backid").click(function () {
+            window.location.href = '/user/list/1'
+        })
+    })
+</script>
+
+</html>

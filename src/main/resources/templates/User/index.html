@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <!--<base href="${pageContext.request.contextPath}/" />-->
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css"/>
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
+
+
+    <style type="text/css">
+        body {
+            padding-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+
+        .option-button:hover {
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+<form class="form-inline definewidth m20" action="" method="get">
+    用户名称：
+    <input type="text" name="param" id="param" class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
+    <button type="button" class="btn btn-primary" id="search">查询</button>&nbsp;&nbsp;
+    <button type="button" class="btn btn-success" id="addnew">新增用户</button>
+</form>
+<table class="table table-bordered table-hover definewidth m10">
+    <thead>
+    <tr>
+        <th>管理员id</th>
+        <th>管理员名称</th>
+        <th>所属学校</th>
+        <th>电话</th>
+        <th>级别</th>
+        <th>创建时间</th>
+        <th>创建者</th>
+        <th>操作</th>
+    </tr>
+    <th:block th:each="user : ${userPage.data}">
+
+        <tr>
+            <td>
+                <th:block th:text="${user.id}"></th:block>
+            </td>
+            <td>
+                <a title="点击查看详情" href="#">
+                    <th:block th:text="${user.userName}"></th:block>
+                </a>
+            </td>
+            <td>
+                <th:block th:text="${user.schoolName}"></th:block>
+            </td>
+            <td>
+                <th:block th:text="${user.tel}"></th:block>
+            </td>
+            <td>
+                <th:block th:text="${user.role}"></th:block>
+            </td>
+            <td>
+                <th:block th:text="${user.createTime}"></th:block>
+            </td>
+            <td>
+                <th:block th:text="${user.creator}"></th:block>
+            </td>
+            <td>
+                <a class="option-button" th:href="@{'/user/edit/' + ${user.id}}">编辑</a>
+                |<a class="option-button"  th:onclick="'javascript: delInfo('+ ${user.id} + ')'">删除</a>
+                |<a class="option-button" th:href="@{'/user/show/' + ${user.id}}">查看</a>
+            </td>
+        </tr>
+    </th:block>
+</table>
+<!--//分页的实现-->
+<div class="inline pull-right page">
+    <th:block th:text="${userPage.totalCount}"></th:block> 条记录
+    <th:block th:text="${userPage.currPage}"></th:block>/
+    <th:block th:text="${userPage.totalPage}"></th:block>页
+    <a href='/user/list/1'>首页</a>
+    <!--<a href='#'>上一页</a>-->
+    <!--<a href='#'>下一页</a>-->
+    <!--<a href='#'>尾页</a>-->
+
+    <th:block th:if="${null != userPage}">
+        <span th:class="${userPage.currPage==1}?'disabled' : ''">
+            <a th:href="@{${userPage.currPage==1}?'##':'/user/list/' + ${userPage.currPage-1}}">&laquo;</a>
+        </span>
+        <span th:if="${userPage.currPage-3 >=1}"><a
+                th:href="@{'/user/list/' + ${userPage.currPage-3}}"
+                th:text="${userPage.currPage -3}">1</a></span>
+        <span th:if="${userPage.currPage-2 >=1}"><a
+                th:href="@{'/user/list/' + ${userPage.currPage-2}}"
+                th:text="${userPage.currPage -2}">1</a></span>
+        <span th:if="${userPage.currPage-1 >=1}"><a
+                th:href="@{'/user/list/' + ${userPage.currPage-1}}"
+                th:text="${userPage.currPage -1}">1</a></span>
+        <span class="active"><a href="#" th:text="${userPage.currPage}">1</a></span>
+        <span th:if="${userPage.currPage+1 <=userPage.totalPage}"><a
+                th:href="@{'/user/list/' + ${userPage.currPage+1}}"
+                th:text="${userPage.currPage +1}">1</a></span>
+        <span th:if="${userPage.currPage+2 <=userPage.totalPage}"><a
+                th:href="@{'/user/list/' + ${userPage.currPage+2}}"
+                th:text="${userPage.currPage +2}">1</a></span>
+        <span th:if="${userPage.currPage+3 <=userPage.totalPage}"><a
+                th:href="@{'/user/list/' + ${userPage.currPage+3}}"
+                th:text="${userPage.currPage +3}">1</a></span>
+        <span th:class="${userPage.currPage==userPage.totalPage}?'disabled' : ''"><a
+                th:href="@{${userPage.currPage==userPage.totalPage}?'##' : '/user/list/' + ${userPage.currPage+1}}">&raquo;</a>
+                </span>
+    </th:block>
+    <a th:href="@{'/user/list/' +${userPage.totalPage}}">尾页</a>
+
+
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    $('#addnew').click(function () {
+        window.location.href = '/user/toAddUser'
+    });
+
+</script>
+<script type="text/javascript">
+    // 点击查询
+    $('#search').click(function () {
+        var param = $('#param').val();
+        if (param != "") {
+            window.location.href = '/user/search?param=' + param
+        }else {
+            alert("请输入用户名！");
+            $('#param').focus;
+        }
+
+    });
+
+
+    //点击删除
+    function delInfo(id) {
+
+        //利用对话框返回的值 （true 或者 false）
+        if (confirm("您将删除编号为：" + id + "的管理员，确认删除？")) {
+            $.ajax({
+                type: "get",
+                url: "/user/del",
+                data: { "id": id },
+                success: function (data) {
+                    if (data == "success") {
+                        alert('删除成功！');
+                        window.location.href = '/user/list/1'
+                    }else {
+                        alert('删除失败！');
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                },
+                complete: function () {
+
+                }
+            });
+        }
+
+    }
+</script>
