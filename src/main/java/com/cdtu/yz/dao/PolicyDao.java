@@ -53,4 +53,10 @@ public interface PolicyDao {
      * @return
      */
     List<Policy> getPolicysByParam(String param);
+
+    /**
+     * 修改政策相关文章的阅读量
+     * @param fileName
+     */
+    void incrementCount(String fileName);
 }

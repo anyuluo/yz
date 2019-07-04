@@ -31,4 +31,18 @@ public interface ProcessService {
      */
     Process getProcessById(Integer id);
 
+    /**
+     * 更新路线信息
+     * @param process
+     * @return
+     */
+    boolean updateProcess(Process process);
+
+    /**
+     * 通过id删除援藏路线的详细信息
+     * @param id
+     * @return
+     */
+    boolean delProcess(Integer id);
+
 }

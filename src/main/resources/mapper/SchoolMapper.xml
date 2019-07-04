@@ -108,4 +108,8 @@
 
     </update>
 
+    <delete id="delSchool" parameterType="java.lang.Integer">
+        delete from school where id=#{id}
+    </delete>
+
 </mapper>

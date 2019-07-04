@@ -1,17 +1,17 @@
-
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<base href="${pageContext.request.contextPath}/" />
+<!--<base href="${pageContext/staticrequest/staticcontextPath}/" />-->
 <title></title>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="./Css/bootstrap.css" />
-<link rel="stylesheet" type="text/css" href="./Css/bootstrap-responsive.css" />
-<link rel="stylesheet" type="text/css" href="./Css/style.css" />
-<script type="text/javascript" src="./Js/jquery.js"></script>
-<script type="text/javascript" src="./Js/bootstrap.js"></script>
-<script type="text/javascript" src="./Js/ckform.js"></script>
-<script type="text/javascript" src="./Js/common.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="/static/Css/style.css" />
+<script type="text/javascript" src="/static/Js/jquery.js"></script>
+<script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/Js/ckform.js"></script>
+<script type="text/javascript" src="/static/Js/common.js"></script>
 
 <style type="text/css">
 body {
@@ -36,12 +36,10 @@ body {
 </style>
 </head>
 <body>
-	<form class="form-inline definewidth m20" action="work/search"
-		method="get">
-		标题： <input type="text" name="param" id="param"
-			class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
-		<button type="submit" class="btn btn-primary">查询</button>
-		&nbsp;&nbsp;
+	<form class="form-inline definewidth m20" action="" method="get" >
+		标题：
+		<input type="text" name="param" id="param" class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
+		<button type="button" class="btn btn-primary" id="search">查询</button>&nbsp;&nbsp;
 		<button type="button" class="btn btn-success" id="addnew">发布动态</button>
 	</form>
 	<table class="table table-bordered table-hover definewidth m10">
@@ -51,38 +49,136 @@ body {
 				<th>标题</th>
 				<th>发布学校</th>
 				<th>阅读量</th>
+				<th>录入系统时间</th>
 				<th>最后更新时间</th>
 				<th>发布者</th>
 				<th>操作</th>
 			</tr>
 		</thead>
+
+		<th:block th:each="work : ${userPage.data}">
 		<tr>
-			<td>00001</td>
+			<td><th:block th:text="${work.id}"></th:block></td>
 			<td style="max-width: 220px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-				<a title="点击查看详情" href="">测试标题</a>
+				<a title="点击查看详情" herf=""><th:block th:text="${work.title}"></th:block></a>
+
 			</td>
 			<td style="max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-				北京大学
+
+				<th:block th:text="${work.schoolName}"></th:block>
 			</td>
+			<!--<td><th:block th:text="${work.count}"></th:block></td>-->
 			<td>0</td>
-			<td>2018-04-20 08:00:00</td>
-			<td>admin</td>
+
+
+			<td><th:block th:text="${work.createTime}"></th:block></td>
+			<td><th:block th:text="${work.editTime}"></th:block></td>
+
+			<td><th:block th:text="${work.editor}"></th:block></td>
+
 			<td>
-				 <a class="option-button" href="#">编辑</a>
-				|<a class="option-button" href="#">删除</a>
-				|<a class="option-button" href="#">查看</a>
+				<a class="option-button" th:href="@{'/work/to-edit/' + ${work.id}}">编辑</a>
+				<!--|<a class="option-button" id="del" th:href="@{'/work/del/' + ${work.id}}">删除</a>-->
+				|<a class="option-button del" th:onclick="'javascript: del('+ ${work.id} + ')'" >删除</a>
+				|<a class="option-button" th:href="@{'/work/show/' + ${work.id}}">查看</a>
 			</td>
+
 		</tr>
+		</th:block>
 	</table>
+
+
 	<div class="inline pull-right page">
-		10 条记录 1/2页 
-		<a href='#'>首页</a>
-		<a href='#'>上一页</a>
-		<a href='#'>下一页</a>
-		<a href='#'>尾页</a>
+		<th:block th:text="${userPage.totalCount}"></th:block>
+		条记录
+		<th:block th:text="${userPage.currPage}"></th:block>
+		/
+		<th:block th:text="${userPage.totalPage}"></th:block>
+		页
+		<a href='/work/list/1'>首页</a>
+		<!--<a href='#'>上一页</a>-->
+		<!--<a href='#'>下一页</a>-->
+		<!--<a href='#'>尾页</a>-->
+
+		<th:block th:if="${null != userPage}">
+        <span th:class="${userPage.currPage==1}?'disabled' : ''">
+            <a th:href="@{${userPage.currPage==1}?'##':'/school/list/' + ${userPage.currPage-1}}">&laquo;</a>
+        </span>
+			<span th:if="${userPage.currPage -3 >=1}"><a
+					th:href="@{'/work/list/' + ${userPage.currPage -3}}"
+					th:text="${userPage.currPage -3}">1</a></span>
+			<span th:if="${userPage.currPage -2 >=1}"><a
+					th:href="@{'/work/list/' + ${userPage.currPage -2}}"
+					th:text="${userPage.currPage -2}">1</a></span>
+			<span th:if="${userPage.currPage -1 >=1}"><a
+					th:href="@{'/work/list/' + ${userPage.currPage -1}}"
+					th:text="${userPage.currPage -1}">1</a></span>
+			<span class="active"><a href="#" th:text="${userPage.currPage}">1</a></span>
+			<span th:if="${userPage.currPage+1 <=userPage.totalPage}"><a
+					th:href="@{'/work/list/' + ${userPage.currPage+1}}"
+					th:text="${userPage.currPage +1}">1</a></span>
+			<span th:if="${userPage.currPage+2 <=userPage.totalPage}"><a
+					th:href="@{'/work/list/' + ${userPage.currPage+2}}"
+					th:text="${userPage.currPage +2}">1</a></span>
+			<span th:if="${userPage.currPage+3 <=userPage.totalPage}"><a
+					th:href="@{'/work/list/' + ${userPage.currPage+3}}"
+					th:text="${userPage.currPage +3}">1</a></span>
+			<span th:class="${userPage.currPage==userPage.totalPage}?'disabled' : ''"><a
+					th:href="@{${userPage.currPage==userPage.totalPage}?'##' : '/work/list/' + ${userPage.currPage+1}}">&raquo;</a>
+                </span>
+		</th:block>
+		<a th:href="@{'/work/list/' +${userPage.totalPage}}">尾页</a>
 	</div>
+
 </body>
-<script>
-    
-</script>
 </html>
+<script type="text/javascript">
+
+    $('#addnew').click(function () {
+        window.location.href = '/work/toaddwork'
+
+    });
+
+    // 点击查询
+    $('#search').click(function () {
+        var param = $('#param').val();
+        if (param != "") {
+            window.location.href = '/work/search?param=' + param
+        } else {
+            alert("请输入工作动态名称！");
+            $('#param').focus;
+        }
+    });
+
+
+    //点击删除
+    function del(id) {
+
+        //利用对话框返回的值 （true 或者 false）
+        if (confirm("您将删除编号为：" + id + "的工作动态，确认删除？")) {
+            $.ajax({
+                type: "get",
+                url: "/work/del",
+                data: {"id": id},
+                success: function (data) {
+                    if (data == "success") {
+                        alert('删除成功！');
+                        window.location.href = '/work/list/1'
+                    } else {
+                        alert('删除失败！');
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                },
+                complete: function () {
+
+                }
+            });
+        }
+    }
+
+
+
+
+</script>

@@ -1,21 +1,21 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page deferredSyntaxAllowedAsLiteral="true"%>
+<!--<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>-->
+<!--<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>-->
+<!--<%@ page deferredSyntaxAllowedAsLiteral="true"%>-->
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <base href="${pageContext.request.contextPath}/"/>
     <title></title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="Css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css" />
     <link rel="stylesheet" type="text/css"
-          href="Css/bootstrap-responsive.css" />
-    <link rel="stylesheet" type="text/css" href="Css/style.css" />
-    <script type="text/javascript" src="Js/jquery.js"></script>
-    <script type="text/javascript" src="Js/bootstrap.js"></script>
-    <script type="text/javascript" src="Js/ckform.js"></script>
-    <script type="text/javascript" src="Js/common.js"></script>
-    <link href="assets/layui/css/layui.css" rel="stylesheet" />
+          href="/static/Css/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css" />
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
+    <link href="/static/assets/layui/css/layui.css" rel="stylesheet" />
     <style type="text/css">
         body {
             padding-bottom: 40px;
@@ -44,11 +44,107 @@
 </form>
 </body>
 
-</html>
 <!--引入你自己的layui文件-->
-<script src="assets/layui/layui.js"></script>
+<script src="/static/assets/layui/layui.js"></script>
 <!--xtree的js文件-->
-<script src="assets/layui-xtree/layui-xtree.js"></script>
-<script type="text/javascript">
+<script src="/static/assets/layui-xtree/layui-xtree.js"></script>
+<script th:inline="javascript">
+
+    //  获取model中的用户已经选中的菜单数据
+    var menus = [[${menus }]];
+    menus = eval(menus);
+
+    //  获取model中系统所有的菜单数据
+    var menuList = [[${menuList }]];
+    menuList = eval(menuList);
+    console.log(menuList);
+
+    //  获取当前修改的管理员级别信息
+    var roleId = [[${roleId }]];
+    
+
+    var json = [];
+
+    for (var i = 0; i < menuList.length; i++) {
+        item = {
+            title: menuList[i].menuName,
+            value: menuList[i].id,
+            data: []
+        };
+        json.push(item)
+        
+    }
+
+    //  将数据渲染到页面
+    layui.use("form", function () {
+        var form = layui.form;
+
+        var xtree = new layuiXtree({
+            elem: "layui-xtree-demo1",
+            form: form,
+            data: json,
+            color: "#000",
+            icon: {
+                open: "&#xe7a0",
+                close: "&#xe622",
+                end:"&#xe621"
+            }
+        });
+
+
+
+        //  默认选中
+        for (var i = 0; i < menus.length; i++) {
+            var id = menus[i].id;
+            var ele = document.getElementById("input-" + id);
+            var xtree_p = ele.parentNode.parentNode;
+            var xtree_all = xtree_p.getElementsByClassName("layui-xtree-item");
+            xtree_p.getElementsByClassName("layui-xtree-checkbox")[id - 1].checked = true;
+            xtree_p.getElementsByClassName("layui-xtree-checkbox")[id - 1].nextSibling.classList.add("layui-form-checked");
+        }
+
+
+        // ajax向后台提交数据
+        $("#btn_getCk").click(function () {
+            var menuIds = "";
+            //  获取已经选中的checkbox
+            var checked = xtree.GetChecked();
+            // 获取已选中的checkbox的value
+            for (var i = 0; i < checked.length; i++){
+                var value = checked[i].value;
+                menuIds += value + ",";
+            }
+
+            var param = "";
+
+            $.ajax({
+                url:"/role/edit",
+                type:"post",
+                async:true,
+                data:{
+                    roleId: roleId,
+                    menuIds: menuIds
+                },
+                success:function (res) {
+                    alert(res)
+                },
+                error:function (e) {
+
+                }
+            })
+
+        });
+    });
+
+
+
+
+
+
+
+
+
 
 </script>
+
+</html>

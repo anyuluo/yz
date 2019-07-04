@@ -1,7 +1,9 @@
 package com.cdtu.yz.controller;
 
+import cn.hutool.core.lang.UUID;
 import com.cdtu.yz.common.PageUtil;
 import com.cdtu.yz.entity.Policy;
+import com.cdtu.yz.entity.User;
 import com.cdtu.yz.service.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 
 /**
@@ -101,10 +104,14 @@ public class PolicyController {
      */
     @RequestMapping("add-policy")
     @ResponseBody
-    public String addPolicy(@RequestParam("file") MultipartFile file, Policy policy) {
+    public String addPolicy(@RequestParam("file") MultipartFile file, Policy policy, HttpSession session) {
         try {
             // 文件名
             String fileName = file.getOriginalFilename();
+            // 获取文件的后缀名
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            // 生成一个uuid作为文件的名称
+            fileName = UUID.randomUUID() + suffixName;
             // 获取文件保存的路径
             String path = new File("..").getCanonicalPath() + "\\policyFile\\";
             // 文件保存路径
@@ -118,6 +125,8 @@ public class PolicyController {
             // 文件写入
             file.transferTo(dir);
             policy.setFilePath(fileName);
+
+            policy.setEditor(((User)session.getAttribute("loginUser")).getUserName());
             policyService.addPolicy(policy);
 
             return "success";
@@ -154,6 +163,9 @@ public class PolicyController {
                 os.flush();
                 i = bis.read(buff);
             }
+            //  修改政策下载量
+            policyService.incrementCount(fileName);
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -165,7 +177,6 @@ public class PolicyController {
                 }
             }
         }
-        System.out.println("success");
         return false;
     }
 

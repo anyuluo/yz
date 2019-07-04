@@ -1,22 +1,21 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <base href="${pageContext.request.contextPath}/" />
+    <!--<base href="${pageContext.request.contextPath}/"/>-->
     <title></title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css" />
-    <link rel="stylesheet" type="text/css" href="/static/Css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css"/>
     <script type="text/javascript" src="/static/Js/jquery.js"></script>
     <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
     <script type="text/javascript" src="/static/Js/ckform.js"></script>
     <script type="text/javascript" src="/static/Js/common.js"></script>
 
-    <link rel="stylesheet" href="/static/editor/css/style.css" />
-    <link rel="stylesheet" href="/static/editor/css/editormd.css" />
-    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/editor/css/style.css"/>
+    <link rel="stylesheet" href="/static/editor/css/editormd.css"/>
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
     <script src="/static/editor/js/jquery.min.js"></script>
     <script src="/static/editor/js/editormd.min.js"></script>
 
@@ -33,6 +32,7 @@
         body {
             padding-bottom: 40px;
         }
+
         .sidebar-nav {
             padding: 9px 0;
         }
@@ -51,81 +51,114 @@
 </head>
 <body>
 <form action="" method="post" class="definewidth m20">
+
     <table class="table table-bordered table-hover ">
-        <tr>
-            <td width="10%" class="tableleft">学校编号</td>
-            <td><th:block th:text="${school.id}"></th:block></td>
-        </tr>
-        <tr>
-            <td class="tableleft">学校名称</td>
-            <td ><th:block th:text="${school.schoolName}"></th:block></td>
-        </tr>
-        <tr>
-            <td class="tableleft">需要援助</td>
-            <td >
-                <th:block th:if="${school.isNeed == '1' }" th:text="是"></th:block>
-                <th:block th:if="${school.isNeed == '0' }" th:text="否"></th:block>
+        <th:block th:if="${school!= null}">
+            <tr>
+                <td width="10%" class="tableleft">学校编号</td>
+                <td>
+                    <th:block th:text="${school.id}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">学校名称</td>
+                <td>
+                    <th:block th:text="${school.schoolName}"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">需要援助</td>
+                <td>
+                    <th:block th:if="${school.isNeed == '1' }" th:text="是"></th:block>
+                    <th:block th:if="${school.isNeed == '0' }" th:text="否"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">前往援助</td>
+                <td>
+                    <th:block th:if="${school.isGo == '1' }" th:text="是"></th:block>
+                    <th:block th:if="${school.isGo == '0' }" th:text="否"></th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">详细信息</td>
+                <td>
+                    <div id="profile-editormd">
+                        <textarea class="editormd-markdown-textarea" name="profile" style="display: none;"><th:block
+                                th:text="${school.profile}"></th:block></textarea>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">援藏历史</td>
+                <td>
+                    <div id="history-editormd">
+                        <textarea class="editormd-markdown-textarea" name="profile" style="display: none;"><th:block
+                                th:text="${school.history}"></th:block></textarea>
+                    </div>
+                </td>
+            </tr>
+        </th:block>
+        <th:block th:if="${message != null}">
+            <td style="color: red">
+                高校
+                <th:block th:text="${message}"></th:block>
+                不存在！
             </td>
-        </tr>
-        <tr>
-            <td class="tableleft">前往援助</td>
-            <td >
-                <th:block th:if="${school.isGo == '1' }" th:text="是"></th:block>
-                <th:block th:if="${school.isGo == '0' }" th:text="否"></th:block>
-            </td>
-        </tr>
-        <tr>
-            <td class="tableleft">详细信息</td>
-            <td>
-                <div id="profile-editormd">
-                    <textarea class="editormd-markdown-textarea"  name="profile" style="display: none;"><th:block th:text="${school.profile}"></th:block></textarea>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="tableleft">援藏历史</td>
-            <td>
-                <div id="history-editormd">
-                    <textarea class="editormd-markdown-textarea"  name="profile" style="display: none;"><th:block th:text="${school.history}"></th:block></textarea>
-                </div>
-            </td>
-        </tr>
+
+            <input type="hidden" id="message" th:value="${message}">
+            <!--<script>-->
+            <!--// 页面加载完以后执行js代码-->
+            <!--$(function () {-->
+            <!--$("table tr:nth-child(even)").addClass("even");-->
+            <!--var message = $('#message').val();-->
+            <!--if (message != '') {-->
+
+            <!--alert(message)-->
+            <!--}-->
+            <!--})-->
+            <!--</script>-->
+        </th:block>
         <tr>
             <td class="tableleft"></td>
             <td>
-                <button type="button" class="btn btn-success" name="backid" id="backid" style="background-color: #5bb75b">返回列表</button>
+                <button type="button" class="btn btn-success" name="backid" id="backid"
+                        style="background-color: #5bb75b">返回列表
+                </button>
             </td>
         </tr>
     </table>
+
+
 </form>
 </body>
 <script type="text/javascript">
 
     // 数据回显
-    $(function() {
+    $(function () {
         editormd.markdownToHTML("profile-editormd", {
-           htmlDecode : "style,script,iframe",
+            htmlDecode: "style,script,iframe",
 
-            emoji : true,
-            taskList : true,
-            tex : true, // 默认不解析
-            flowChart : true, // 默认不解析
-            sequenceDiagram : true, // 默认不解析
-            codeFold : true
+            emoji: true,
+            taskList: true,
+            tex: true, // 默认不解析
+            flowChart: true, // 默认不解析
+            sequenceDiagram: true, // 默认不解析
+            codeFold: true
         });
     });
 
     // 援藏历史数据回显
-    $(function() {
+    $(function () {
         editormd.markdownToHTML("history-editormd", {
-            htmlDecode : "style,script,iframe",
+            htmlDecode: "style,script,iframe",
 
-            emoji : true,
-            taskList : true,
-            tex : true, // 默认不解析
-            flowChart : true, // 默认不解析
-            sequenceDiagram : true, // 默认不解析
-            codeFold : true
+            emoji: true,
+            taskList: true,
+            tex: true, // 默认不解析
+            flowChart: true, // 默认不解析
+            sequenceDiagram: true, // 默认不解析
+            codeFold: true
         });
     });
 

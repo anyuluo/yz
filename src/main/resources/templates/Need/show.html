@@ -5,13 +5,27 @@
     <base href="${pageContext.request.contextPath}/" />
     <title></title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="./Css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="./Css/bootstrap-responsive.css" />
-    <link rel="stylesheet" type="text/css" href="./Css/style.css" />
-    <script type="text/javascript" src="./Js/jquery.js"></script>
-    <script type="text/javascript" src="./Js/bootstrap.js"></script>
-    <script type="text/javascript" src="./Js/ckform.js"></script>
-    <script type="text/javascript" src="./Js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css" />
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
+
+    <link rel="stylesheet" href="/static/editor/css/style.css" />
+    <link rel="stylesheet" href="/static/editor/css/editormd.css" />
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+    <script src="/static/editor/js/jquery.min.js"></script>
+    <script src="/static/editor/js/editormd.min.js"></script>
+    <!--  markdown数据回显js代码  -->
+    <script src="/static/editor/lib/marked.min.js"></script>
+    <script src="/static/editor/lib/prettify.min.js"></script>
+    <script src="/static/editor/lib/raphael.min.js"></script>
+    <script src="/static/editor/lib/underscore.min.js"></script>
+    <script src="/static/editor/lib/sequence-diagram.min.js"></script>
+    <script src="/static/editor/lib/flowchart.min.js"></script>
+    <script src="/static/editor/lib/jquery.flowchart.min.js"></script>
     <style type="text/css">
         body {
             padding-bottom: 40px;
@@ -34,43 +48,68 @@
 </head>
 <form action="" method="post">
     <table class="table table-bordered table-hover definewidth m10">
+        <th:block th:if="${need != null}">
         <tr>
             <td width="10%" class="tableleft">需求编号</td>
-            <td>1001</td>
+            <td><th:block th:text="${need.id}"></th:block></td>
         </tr>
         <tr>
             <td class="tableleft">标题</td>
-            <td >测试标题</td>
+            <td><th:block th:text="${need.title}"></th:block></td>
         </tr>
         <tr>
             <td class="tableleft">紧急状态</td>
-            <td >
-                非常紧急
-            </td>
+            <td><th:block th:text="${need.urgent}"></th:block></td>
         </tr>
         <tr>
             <td class="tableleft">学校</td>
-            <td>
-                北京大学
-            </td>
+            <td><th:block th:text="${need.schoolName}"></th:block></td>
         </tr>
         <tr>
             <td class="tableleft">详细信息</td>
+            <!--<td><th:block th:text="${need.content}"></th:block></td>-->
             <td>
-                测试内容
+            <div id="content-editormd">
+                <textarea class="editormd-markdown-textarea"  name="content" style="display: none;"><th:block th:text="${need.content}"></th:block></textarea>
+            </div>
             </td>
         </tr>
+        </th:block>
+        <th:block th:if="${message != null}">
+            <td style="color: red">
+                标题 <th:block th:text="${message}"></th:block> 不存在！
+            </td>
+            <input type="hidden" id="message" th:value="${message}">
+        </th:block>
 
         <tr>
             <td class="tableleft"></td>
             <td>
-                <button type="button" class="btn btn-success" name="backid" id="backid">返回列表</button>
+                <button type="button" class="btn btn-success" name="backid" id="backid" style="background-color: #5bb75b">返回列表</button>
             </td>
         </tr>
     </table>
 </form>
 </body>
 <script type="text/javascript">
+//返回列表
+    $(function () {
+        $('#backid').click(function () {
+            window.location.href = '/need/list/1'
+        })
+    });
 
+// 数据回显
+$(function() {
+    editormd.markdownToHTML("content-editormd", {
+        htmlDecode : "style,script,iframe",
+        emoji : true,
+        taskList : true,
+        tex : true, // 默认不解析
+        flowChart : true, // 默认不解析
+        sequenceDiagram : true, // 默认不解析
+        codeFold : true
+    });
+});
 </script>
 </html>

@@ -209,4 +209,8 @@
         <!--</trim>-->
     <!--</insert>-->
 
+    <!--  修改援藏需求的文章的阅读量  -->
+    <update id="incrementCount" parameterType="java.lang.String">
+        update policy set count = count + 1 where fileName = #{fileName}
+    </update>
 </mapper>

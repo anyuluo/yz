@@ -60,7 +60,7 @@
         <tr>
             <td><th:block th:text="${process.id}"></th:block></td>
             <td>
-                <th:block th:text="${process.id}"></th:block>
+                <th:block th:text="${process.processName}"></th:block>
             </td>
             <td><th:block th:text="${process.createTime}"></th:block></td>
             <td><th:block th:text="${process.creator}"></th:block></td>
@@ -141,7 +141,7 @@
     function delInfo(id) {
 
         //利用对话框返回的值 （true 或者 false）
-        if (confirm("您将删除编号为：" + id + "的管理员，确认删除？")) {
+        if (confirm("您将删除编号为：" + id + "的援藏路线信息，确认删除？")) {
             $.ajax({
                 type: "get",
                 url: "/process/del",

@@ -10,14 +10,14 @@ import lombok.Data;
  */
 @Data
 public class Person {
-    private Long id;
+    private Integer id;
     private String name;
     private String course;  // 援助课程
-    private Long schoolId;  // 高校id
+    private Integer schoolId;  // 高校id
     private String schoolName;  // 高校名称
     private String tel;  // 电话
     private String qq;  // qq号
-//    private String createTime;  // 创建时间
+    private String createTime;  // 创建时间
     private String status;  // 状态属性
     private String profile;  // 简介
     private String reserve;  // 备用属性

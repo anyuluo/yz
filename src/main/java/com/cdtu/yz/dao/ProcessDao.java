@@ -4,6 +4,7 @@ import com.cdtu.yz.common.PageUtil;
 import com.cdtu.yz.entity.Process;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.util.List;
 
 /**
@@ -38,4 +39,18 @@ public interface ProcessDao {
      * @return
      */
     Process getProcessById(Integer id);
+
+    /**
+     * 更新路线信息
+     * @param process
+     * @return
+     */
+    boolean updateProcess(Process process);
+
+    /**
+     * 通过id删除路线的详细信息
+     * @param id
+     * @return
+     */
+    boolean delProcess(Integer id);
 }

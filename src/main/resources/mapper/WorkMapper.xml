@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdtu.yz.dao.WorkDao">
+
+    <insert id="addWork" parameterType="com.cdtu.yz.entity.Work">
+        insert into work
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="history_go != null">
+                history_go,
+            </if>
+            <if test="schoolName != null">
+                schoolName,
+            </if>
+
+            <if test="createTime != null">
+                createTime,
+            </if>
+
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="history_go != null">
+                #{history_go},
+            </if>
+            <if test="schoolName != null">
+                #{schoolName},
+            </if>
+
+            <if test="createTime != null">
+            #{createTime},
+            </if>
+
+        </trim>
+    </insert>
+
+    <!--  工作动态信息分页查询  -->
+    <select id="getWorkPage" parameterType="com.cdtu.yz.common.PageUtil" resultType="com.cdtu.yz.entity.Work">
+        select * from work limit #{start}, #{pageSize}
+    </select>
+
+    <!--  查询工作动态的总条数  -->
+    <select id="getWorkCount" resultType="java.lang.Integer">
+        select count(*) from work
+    </select>
+
+    <!--  通过id查询工作动态信息  -->
+    <select id="getWorkById" parameterType="java.lang.Integer" resultType="com.cdtu.yz.entity.Work">
+        select * from work where id= #{id}
+    </select>
+
+    <!--  删除工作动态 -->
+    <delete id="delWork" parameterType="com.cdtu.yz.entity.Work">
+        delete from work where id = #{id}
+    </delete>
+
+
+    <!--  修改工作动态信息  -->
+    <update id="editWork" parameterType="com.cdtu.yz.entity.Work">
+        update work set
+        <trim prefix="" suffix="where id = #{id}" suffixOverrides=",">
+
+            <if test="title != null">
+                title=#{title},
+            </if>
+            <if test="schoolName != null">
+                schoolName=#{schoolName},
+            </if>
+            <if test="editor != null">
+                editor=#{editor},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+
+
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="reserve != null">
+                reserve=#{reserve},
+            </if>
+            <if test="history_go != null">
+                history_go=#{history_go},
+            </if>
+            <if test="editTime != null">
+                editTime=#{editTime},
+        </if>
+
+        </trim>
+
+    </update>
+
+
+    <!--  通过标题名字查询工作动态的信息  -->
+    <select id="getWorkByName" parameterType="java.lang.String" resultType="com.cdtu.yz.entity.Work">
+        select * from work where title= #{title}
+    </select>
+
+    <!--  修改工作动态的文章的阅读量  -->
+    <update id="incrementCount" parameterType="java.lang.Integer">
+        update work set count = count + 1 where id = #{id}
+    </update>
+
+
+
+</mapper>

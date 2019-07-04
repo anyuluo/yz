@@ -256,4 +256,10 @@
         </trim>
     </insert>
 
+
+    <!--  查询菜单权限信息  -->
+    <select id="getMenuByRoleName" parameterType="java.lang.String" resultType="com.cdtu.yz.entity.Menu">
+        SELECT menu.* from menu WHERE id in (SELECT menuId FROM role_item WHERE roleId = (SELECT id from role where roleName=#{role}))
+
+    </select>
 </mapper>

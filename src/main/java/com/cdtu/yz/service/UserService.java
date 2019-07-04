@@ -2,8 +2,10 @@ package com.cdtu.yz.service;
 
 
 import com.cdtu.yz.common.PageUtil;
+import com.cdtu.yz.entity.Menu;
 import com.cdtu.yz.entity.User;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ public interface UserService {
      * @param password
      * @return
      */
-    boolean login(String username, String password);
+    User login(String username, String password);
 
     /**
      * 通过用户id查询用户信息
@@ -75,4 +77,11 @@ public interface UserService {
      * @return
      */
     boolean delUser(Integer id);
+
+    /**
+     * 获取用户菜单信息
+     * @param user
+     * @return
+     */
+    List<Menu> getUserMenu(User user);
 }

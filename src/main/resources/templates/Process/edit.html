@@ -17,10 +17,74 @@
     <input value="" id="name" placeholder="点解流程节点可以删除" />
     <input type="button" value="增加" onclick="add();" />
     <input type="button" value="提交"/>
+
 </div>
 </body>
-<script type="text/javascript">
+<div class="detail-left-bottom" id="context">
+    <script th:inline="javascript">
 
+        var param = [[${process.detail}]];
 
+        var params = param.split("-");
+
+        for(var i = 0; i < params.length; i++){
+            var body=document.getElementById("context");
+            var childs=body.children;
+            if(childs.length!=1){
+
+                var div2=document.createElement("div");
+                div2.setAttribute("class", "center");
+                body.appendChild(div2);
+
+                var div3=document.createElement("div");
+                div3.setAttribute("class", "to_right");
+                body.appendChild(div3);
+            }
+
+            var div=document.createElement("div");
+            var p=document.createElement("p");
+
+            p.innerHTML = params[i];
+            div.setAttribute("class", "roundedRectangle");
+            p.setAttribute("onclick","deletediv(this);");
+            div.appendChild(p);
+            body.appendChild(div);
+        }
+    </script>
+
+</div>
+<script th:inline="javascript">
+    // ajax提交数据
+    $('#submit').click(function () {
+        if (!$('#processName').val()) {
+            alert("请输入路线名称！");
+        }
+
+        var detail = "";//声明一个新的变量
+        var list1 = $(".roundedRectangle > p").each(function (index, element) {//遍历每个对象
+            detail = detail + $(this).text() + "-"; //字符串连接
+        });
+
+        // var form = new FormData(document.getElementById("policy"));
+        $.ajax({
+            url: "/process/edit-process",
+            type: "post",
+            data: {
+                id: [[${process.id}]],
+                processName: $('#processName').val(),
+                detail: detail
+            },
+            success: function (data) {
+                if (data == "success") {
+                    alert("保存成功！")
+                } else {
+                    alert("保存失败！")
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    })
 </script>
 </html>

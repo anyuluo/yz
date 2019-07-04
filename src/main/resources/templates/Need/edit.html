@@ -2,18 +2,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <base href="${pageContext.request.contextPath}/" />
+    <!--<base href="${pageContext.request.contextPath}/" />-->
     <title></title>
-    <link rel="stylesheet" type="text/css" href="./Css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="./Css/bootstrap-responsive.css" />
-    <link rel="stylesheet" type="text/css" href="./Css/style.css" />
-    <script type="text/javascript" src="./Js/jquery.js"></script>
-    <script type="text/javascript" src="./Js/bootstrap.js"></script>
-    <script type="text/javascript" src="./Js/ckform.js"></script>
-    <script type="text/javascript" src="./Js/common.js"></script>
-    <script type="text/javascript"  src="./ueditor/ueditor.config.js"></script>
-    <script type="text/javascript"  src="./ueditor/ueditor.all.min.js"></script>
-    <script type="text/javascript"  src="./ueditor/lang/zh-cn/zh-cn.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css" />
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
+    <!--<script type="text/javascript"  src="/static/ueditor/ueditor.config.js"></script>-->
+    <!--<script type="text/javascript"  src="/static/ueditor/ueditor.all.min.js"></script>-->
+    <!--<script type="text/javascript"  src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>-->
+    <!--  markdown  -->
+    <link rel="stylesheet" href="/static/editor/css/style.css" />
+    <link rel="stylesheet" href="/static/editor/css/editormd.css" />
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+    <script src="/static/editor/js/jquery.min.js"></script>
+    <script src="/static/editor/js/editormd.min.js"></script>
+
+    <script src="/static/editor/lib/marked.min.js"></script>
+    <script src="/static/editor/lib/prettify.min.js"></script>
+    <script src="/static/editor/lib/raphael.min.js"></script>
+    <script src="/static/editor/lib/underscore.min.js"></script>
+    <script src="/static/editor/lib/sequence-diagram.min.js"></script>
+    <script src="/static/editor/lib/flowchart.min.js"></script>
+    <script src="/static/editor/lib/jquery.flowchart.min.js"></script>
 
     <style type="text/css">
         body {
@@ -35,38 +49,49 @@
 
     </style>
 </head>
-<form action="" method="post">
+<form action="" method="post" id="edit-need" name="edit-need">
     <table class="table table-bordered table-hover definewidth m10">
         <tr>
             <td width="10%" class="tableleft">需求编号</td>
-            <td><input type="text" readonly="readonly"/></td>
+            <td>
+                <th:block th:if="${need != null}">
+                    <input type="text" id="id" name="id" th:value="${need.id}" readonly="readonly"/>
+                </th:block>
+            </td>
         </tr>
         <tr>
             <td class="tableleft">标题</td>
-            <td ><input type="text" style="width: 300px;"/></td>
+            <td ><input type="text" id="title" name="title" th:value="${need.title}" style="width: 300px;"/>
+                <div style="display: none; color: red" id="message">标题已存在已存在！</div></td>
         </tr>
         <tr>
             <td class="tableleft">紧急状态</td>
             <td >
-                <input type="radio" id="level" name="level" value="2" checked/> 非常紧急
+                <input type="radio" value="1" name="urgent" th:attr ="checked=${need.urgent == '1'?true:false}"/> 非常紧急
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" id="level" name="level" value="1" /> 紧急
+                <input type="radio" value="0" name="urgent" th:attr ="checked=${need.urgent == '0'?true:false}"/> 不紧急
             </td>
         </tr>
         <tr>
             <td class="tableleft">选择学校</td>
             <td>
-                <select>
-                    <option value="0001">北京大学</option>
-                    <option value="0002">清华大学</option>
+                <select id="schoolName" name="schoolName">
+                    <option th:value="${need.schoolName}" selected="selected">
+                        <th:block th:text="${need.schoolName}"></th:block>
+                    </option>
+                    <th:block th:each="school : ${schools}">
+                        <option th:value="${school.schoolName}" > <th:block th:text="${school.schoolName}"></th:block></option>
+                    </th:block>
                 </select>
             </td>
         </tr>
         <tr>
             <td class="tableleft">详细信息</td>
             <td>
-                <div>
-                    <textarea rows="5" cols="5"></textarea>
+                <div id="content-editormd">
+                    <textarea class="editormd-markdown-textarea"  name="content" style="display: none;"><th:block th:text="${need.content}"></th:block></textarea>
+                    <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                    <textarea id="content" class="editormd-html-textarea"></textarea>
                 </div>
             </td>
         </tr>
@@ -74,13 +99,50 @@
         <tr>
             <td class="tableleft"></td>
             <td>
-                <button type="button" id="submit-button" class="btn btn-primary">保存</button> &nbsp;&nbsp;<button type="button" class="btn btn-success" name="backid" id="backid">返回列表</button>
+                <button type="button" id="submit-button" class="btn btn-primary" onclick="submitEdit()" style="background-color: #006dcc">保存</button>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-success" name="backid" id="backid" style="background-color: #006dcc">返回列表</button>
             </td>
         </tr>
     </table>
 </form>
 </body>
 <script type="text/javascript">
+    //  高校简介markdown编辑器
+    var content;
+    $(function() {
+        content = editormd("content-editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: "/static/editor/lib/"
+        });
 
+    });
+    //提交
+    function submitEdit() {
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            //dataType: "json",//预期服务器返回的数据类型
+            url: "/need/edit-need", //url
+            data: $('#edit-need').serialize(),
+            success: function (result) {
+                console.log(result);//打印服务端返回的数据(调试用)
+                if (result == 'true') {
+                    window.location.href = '/need/list/1'
+                    alert("保存成功！");
+                }
+            },
+            error : function() {
+                alert("网络异常！");
+            }
+        });
+    }
+    $(function () {
+        $("#backid").click(function () {
+            window.location.href = '/need/list/1'
+        })
+    });
 </script>
 </html>

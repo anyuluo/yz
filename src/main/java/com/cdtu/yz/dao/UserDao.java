@@ -1,7 +1,9 @@
 package com.cdtu.yz.dao;
 
 import com.cdtu.yz.common.PageUtil;
+import com.cdtu.yz.entity.Menu;
 import com.cdtu.yz.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -75,5 +77,12 @@ public interface UserDao {
      * @return
      */
     boolean insertDel(User user);
+
+    /**
+     * 通过角色名称获取用户的菜单信息
+     * @param role
+     * @return
+     */
+    List<Menu> getMenuByRoleName(String role);
 
 }

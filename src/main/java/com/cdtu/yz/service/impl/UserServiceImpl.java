@@ -5,11 +5,13 @@ import cn.hutool.crypto.SecureUtil;
 import com.cdtu.yz.common.PageUtil;
 import com.cdtu.yz.dao.SchoolDao;
 import com.cdtu.yz.dao.UserDao;
+import com.cdtu.yz.entity.Menu;
 import com.cdtu.yz.entity.User;
 import com.cdtu.yz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sound.midi.Soundbank;
 import java.util.List;
 
 
@@ -29,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean login(String username, String password) {
+    public User login(String username, String password) {
         // 通过用户名查询用户密码
         User user = userDao.getUserByName(username);
 
@@ -37,9 +39,9 @@ public class UserServiceImpl implements UserService {
         password = SecureUtil.md5(password);
 
         if (null != user && password.equals(user.getPassword())) {
-            return true;
+            return user;
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -94,7 +96,7 @@ public class UserServiceImpl implements UserService {
         user.setCreateTime(DateUtil.now());
         // 将用户数据交给dao层
         userDao.insert(user);
-        return false;
+        return true;
     }
 
     @Override
@@ -111,5 +113,12 @@ public class UserServiceImpl implements UserService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<Menu> getUserMenu(User user) {
+        // 通过角色名称获取用户的菜单信息
+
+        return userDao.getMenuByRoleName(user.getRole());
     }
 }

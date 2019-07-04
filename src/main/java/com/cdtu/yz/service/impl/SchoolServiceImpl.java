@@ -28,7 +28,7 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     public School getSchoolById(Integer id) {
-        return decode(schoolDao.getSchoolById(id));
+        return schoolDao.getSchoolById(id);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     public School getSchoolByName(String schoolName) {
-        return decode(schoolDao.getSchoolByName(schoolName));
+        return schoolDao.getSchoolByName(schoolName);
     }
 
     @Override
@@ -61,17 +61,22 @@ public class SchoolServiceImpl implements SchoolService {
         // 生成一个时间戳
         school.setCreateTime(DateUtil.now());
 
-        return schoolDao.addSchool(encode(school));
+        return schoolDao.addSchool(school);
     }
 
     @Override
     public School editSchool(School school) {
 
-        if (schoolDao.updateSchool(encode(school))){
+        if (schoolDao.updateSchool(school)){
             return school;
         }
         return null;
 
+    }
+
+    @Override
+    public boolean delSchool(Integer id) {
+        return schoolDao.delSchool(id);
     }
 
     /**

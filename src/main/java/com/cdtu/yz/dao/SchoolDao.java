@@ -59,4 +59,11 @@ public interface SchoolDao {
      */
     boolean updateSchool(School school);
 
+    /**
+     * 通过id删除学校详细信息
+     * @param id
+     * @return
+     */
+    boolean delSchool(Integer id);
+
 }

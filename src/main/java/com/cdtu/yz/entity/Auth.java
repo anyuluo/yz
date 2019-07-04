@@ -11,8 +11,8 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class Auth {
-    private String id;
+public class Auth {//implements GrantedAuthority {
+    private Integer id;
     private String roleName;  // 角色名称
     private String authority;  // 权限管理权限
     private String role;  // 角色管理权限

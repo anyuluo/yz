@@ -44,4 +44,10 @@ public interface PolicyService {
      * @return
      */
     boolean editPolicy(Policy policy);
+
+    /**
+     * 修改政策信息的阅读量
+     * @param id
+     */
+    void incrementCount(String id);
 }

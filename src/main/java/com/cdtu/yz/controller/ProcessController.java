@@ -2,6 +2,7 @@ package com.cdtu.yz.controller;
 
 import com.cdtu.yz.common.PageUtil;
 import com.cdtu.yz.entity.Process;
+import com.cdtu.yz.entity.User;
 import com.cdtu.yz.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -48,12 +50,17 @@ public class ProcessController {
 
     /**
      * 添加路线信息
+     * @param session
      * @param process
      * @return
      */
     @RequestMapping("/add-process")
     @ResponseBody
-    public String addProcess(Process process){
+    public String addProcess(HttpSession session, Process process){
+        //  设置创建者的信息
+        User user = (User)session.getAttribute("loginUser");
+        process.setCreator(user.getCreator());
+        process.setSchoolName(user.getSchoolName());
         if(processService.addProcess(process)){
 
             return "success";
@@ -71,5 +78,30 @@ public class ProcessController {
     public String toEdit(Model model, Process process){
         model.addAttribute("process", processService.getProcessById(process.getId()));
         return "Process/edit";
+    }
+
+    /**
+     * 修改路线信息到数据库中
+     * @param model
+     * @param process
+     * @return
+     */
+    @RequestMapping("/edit-process")
+    @ResponseBody
+    public String edit(Model model, Process process){
+        if(processService.updateProcess(process)){
+
+            return "success";
+        }
+        return "fail";
+    }
+
+    @RequestMapping("/del")
+    @ResponseBody
+    public String del(Integer id){
+        if (processService.delProcess(id)){
+            return "success";
+        }
+        return "false";
     }
 }

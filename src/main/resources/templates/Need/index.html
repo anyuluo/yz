@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <base href="${pageContext.request.contextPath}/" />
     <title></title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="./Css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="./Css/bootstrap-responsive.css" />
-    <link rel="stylesheet" type="text/css" href="./Css/style.css" />
-    <script type="text/javascript" src="./Js/jquery.js"></script>
-    <script type="text/javascript" src="./Js/bootstrap.js"></script>
-    <script type="text/javascript" src="./Js/ckform.js"></script>
-    <script type="text/javascript" src="./Js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css" />
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
 
     <style type="text/css">
         body {
@@ -36,11 +35,11 @@
     </style>
 </head>
 <body>
-<form class="form-inline definewidth m20" action="need/search"
+<form class="form-inline definewidth m20" action=""
       method="get">
-    标题： <input type="text" name="param" id="param"
+    标题： <input type="text" name="param" id="title"
                class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
-    <button type="submit" class="btn btn-primary">查询</button>
+    <button type="button" class="btn btn-primary" id="search">查询</button>
     &nbsp;&nbsp;
     <button type="button" class="btn btn-success" id="addnew">发布需求</button>
 </form>
@@ -53,38 +52,126 @@
         <th>发布学校</th>
         <th>阅读量</th>
         <th>发布时间</th>
+        <th>更新时间</th>
         <th>发布者</th>
         <th>操作</th>
     </tr>
     </thead>
+    <th:block th:each="need : ${needPage.data}">
     <tr>
-        <td>0001</td>
+        <td>
+            <th:block th:text="${need.id}"></th:block>
+        </td>
         <td style="max-width: 220px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
             <a title="点击查看全文" href="#">
-                测试标题
+                <th:block th:text="${need.title}"></th:block>
             </a>
         </td>
-        <td>非常紧急</td>
-        <td style="max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">北京大学</td>
-        <td>0</td>
-        <td>2018-04-20 08:00:00</td>
-        <td>admin</td>
+        <td><th:block th:text="${need.urgent}"></th:block></td>
+        <td style="max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><th:block th:text="${need.schoolName}"></th:block></td>
+        <td><th:block th:text="${need.count}"></th:block></td>
+        <td><th:block th:text="${need.createTime}"></th:block></td>
+        <td><th:block th:text="${need.editTime}"></th:block></td>
+        <td><th:block th:text="${need.status}"></th:block></td>
         <td>
-            <a class="option-button" href="#">编辑</a>
-            |<a class="option-button" href="#">删除</a>
-            |<a class="option-button" href="#">查看</a>
+            <a class="option-button"  th:href="@{'/need/to-edit/' + ${need.id}}">编辑</a>
+            |<a class="option-button del" th:onclick="'javascript: delInfo('+ ${need.id} + ')'">删除</a>
+            |<a class="option-button" th:href="@{'/need/show/' + ${need.id}}">查看</a>
         </td>
     </tr>
+    </th:block>
 </table>
+<!--//分页的实现-->
 <div class="inline pull-right page">
-    10 条记录 1/2页
-    <a href='#'>首页</a>
-    <a href='#'>上一页</a>
-    <a href='#'>下一页</a>
-    <a href='#'>尾页</a>
+    <th:block th:text="${needPage.totalCount}"></th:block>
+    条记录
+    <th:block th:text="${needPage.currPage}"></th:block>
+    /
+    <th:block th:text="${needPage.totalPage}"></th:block>
+    页
+    <a href='/need/list/1'>首页</a>
+    <!--<a href='#'>上一页</a>-->
+    <!--<a href='#'>下一页</a>-->
+    <!--<a href='#'>尾页</a>-->
+
+    <th:block th:if="${null != needPage}">
+        <span th:class="${needPage.currPage==1}?'disabled' : ''">
+            <a th:href="@{${needPage.currPage==1}?'##':'/need/list/' + ${needPage.currPage-1}}">&laquo;</a>
+        </span>
+        <span th:if="${needPage.currPage-3 >=1}"><a
+                th:href="@{'/need/list/' + ${needPage.currPage-3}}"
+                th:text="${needPage.currPage -3}">1</a></span>
+        <span th:if="${needPage.currPage-2 >=1}"><a
+                th:href="@{'/need/list/' + ${needPage.currPage-2}}"
+                th:text="${needPage.currPage -2}">1</a></span>
+        <span th:if="${needPage.currPage-1 >=1}"><a
+                th:href="@{'/need/list/' + ${needPage.currPage-1}}"
+                th:text="${needPage.currPage -1}">1</a></span>
+        <span class="active"><a href="#" th:text="${needPage.currPage}">1</a></span>
+        <span th:if="${needPage.currPage+1 <=needPage.totalPage}"><a
+                th:href="@{'/need/list/' + ${needPage.currPage+1}}"
+                th:text="${needPage.currPage +1}">1</a></span>
+        <span th:if="${needPage.currPage+2 <=needPage.totalPage}"><a
+                th:href="@{'/need/list/' + ${needPage.currPage+2}}"
+                th:text="${needPage.currPage +2}">1</a></span>
+        <span th:if="${needPage.currPage+3 <=needPage.totalPage}"><a
+                th:href="@{'/need/list/' + ${needPage.currPage+3}}"
+                th:text="${needPage.currPage +3}">1</a></span>
+        <span th:class="${needPage.currPage==needPage.totalPage}?'disabled' : ''"><a
+                th:href="@{${needPage.currPage==needPage.totalPage}?'##' : '/need/list/' + ${needPage.currPage+1}}">&raquo;</a>
+                </span>
+    </th:block>
+    <a th:href="@{'/need/list/' +${needPage.totalPage}}">尾页</a>
 </div>
+
 </body>
 <script>
+    //点击添加
+    $('#addnew').click(function () {
+        window.location.href = '/need/to-add'
+    });
+    // 点击查询
+    $('#search').click(function () {
+        var title = $('#title').val();
+        if (title != "") {
+            window.location.href = '/need/search?title=' + title
+        } else {
+            alert("请输入需求名称！");
+            $('#title').focus;
+        }
+        if(title == "null"){
+            alert("查无此人！");
+            $('#title').focus;
+        }
+    });
 
+
+    //点击删除
+    function delInfo(id) {
+
+        //利用对话框返回的值 （true 或者 false）
+        if (confirm("您将删除编号为：" + id + "的需求，确认删除？")) {
+            $.ajax({
+                type: "get",
+                url: "/need/del",
+                data: { "id": id },
+                success: function (data) {
+                    if (data == "success") {
+                        alert('删除成功！');
+                        window.location.href = '/need/list/1'
+                    }else {
+                        alert('删除失败！');
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                },
+                complete: function () {
+
+                }
+            });
+        }
+
+    }
 </script>
 </html>

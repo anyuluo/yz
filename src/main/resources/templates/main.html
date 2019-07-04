@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>西藏援藏系统</title>
     <link rel="stylesheet" href="/static/index/css/public.css">
@@ -14,17 +13,17 @@
         <img src="/static/image/logo.png" alt="" class="logo">
         <!--导航-->
         <ul class="navLink">
-            <li><a href="">首页</a></li>
-            <li><a href="/yz/work">援藏工作</a></li>
-            <li><a href="/yz/policy">援藏政策</a></li>
-            <li><a href="/yz/need">援藏需求</a></li>
-            <li><a href="/yz/process">援藏路径</a></li>
-            <li><a href="/yz/school">援藏高校</a></li>
-            <li><a href="/yz/work">工作动态</a></li>
-            <li><a href="/yz/person">人员招聘</a></li>
+            <li><a href="/">首页</a></li>
+            <li><a href="/index/work">援藏工作</a></li>
+            <li><a href="/index/policy">援藏政策</a></li>
+            <li><a href="/index/need">援藏需求</a></li>
+            <li><a href="/index/process">援藏路径</a></li>
+            <li><a href="/index/school">援藏高校</a></li>
+            <li><a href="/index/work">工作动态</a></li>
+            <li><a href="/index/adver">人员招聘</a></li>
         </ul>
         <!--登陆-->
-		<a href="login.html" class="login">登陆</a>
+        <a href="login.html" class="login">登陆</a>
     </div>
 </header>
 <!--网页内容-->
@@ -38,7 +37,7 @@
                         <h1>援藏工作</h1>
                     </div>
                     <div class="sectionMode02">
-                        <a href="">查看更多</a>
+                        <a href="/index/work">查看更多</a>
                     </div>
                 </li>
                 <li>
@@ -47,7 +46,7 @@
                         <h1>援藏政策</h1>
                     </div>
                     <div class="sectionMode02">
-                        <a href="">查看更多</a>
+                        <a href="/index/policy">查看更多</a>
                     </div>
                 </li>
                 <li>
@@ -56,7 +55,7 @@
                         <h1>援藏路径</h1>
                     </div>
                     <div class="sectionMode02">
-                        <a href="">查看更多</a>
+                        <a href="/index/process">查看更多</a>
                     </div>
                 </li>
                 <li>
@@ -65,7 +64,7 @@
                         <h1>人员招聘</h1>
                     </div>
                     <div class="sectionMode02">
-                        <a href="">查看更多</a>
+                        <a href="/index/adver">查看更多</a>
                     </div>
                 </li>
                 <li>
@@ -74,7 +73,7 @@
                         <h1>援藏需求</h1>
                     </div>
                     <div class="sectionMode02">
-                        <a href="">查看更多</a>
+                        <a href="/index/need">查看更多</a>
                     </div>
                 </li>
                 <li>
@@ -83,7 +82,7 @@
                         <h1>援藏高校</h1>
                     </div>
                     <div class="sectionMode02">
-                        <a href="">查看更多</a>
+                        <a href="/index/school">查看更多</a>
                     </div>
                 </li>
             </ul>
@@ -93,11 +92,11 @@
                     人员招聘
                 </div>
                 <ul class="list">
-                    <li>测试内容</li>
-					<li>测试内容</li>
-					<li>测试内容</li>
-					<li>测试内容</li>
-					<li>测试内容</li>
+                    <th:block th:each="recruit : ${recruits}">
+                        <li><a th:href="@{'/index/toAdverShow?id=' + ${recruit.id}}">
+                            <span><th:block th:text="${recruit.title}"></th:block></span></a></li>
+
+                    </th:block>
                 </ul>
             </div>
         </div>
@@ -120,14 +119,14 @@
             <div class="section02-center">
                 <div class="section02-center-title">
                     <h1>援藏需求</h1>
-                    <a href="">更多</a>
+                    <a href="/index/need">更多</a>
                 </div>
                 <ul class="list">
-                    <li>测试内容</li>
-					<li>测试内容</li>
-					<li>测试内容</li>
-					<li>测试内容</li>
-					<li>测试内容</li>
+                    <th:block th:each="need : ${needs}">
+                        <li><a th:href="@{'/need/toNeedShow?id=' + ${need.id}}">
+                            <span><th:block th:text="${need.title}"></th:block></span></a></li>
+
+                    </th:block>
                 </ul>
             </div>
             <div class="section02-right">

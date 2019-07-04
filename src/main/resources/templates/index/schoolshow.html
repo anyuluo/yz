@@ -2,103 +2,113 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <base href="<%=basePath %>/">
+    <!--<base href="<%=basePath %>/">-->
     <meta charset="UTF-8">
     <title>西藏援藏系统</title>
-    <link rel="stylesheet" href="Css/public.css">
-    <link rel="stylesheet" href="Css/utibetDetail.css">
+    <link rel="stylesheet" href="/static/Css/public.css">
+    <link rel="stylesheet" href="/static/Css/utibetDetail.css">
+
+    <link rel="stylesheet" href="/static/editor/css/style.css"/>
+    <link rel="stylesheet" href="/static/editor/css/editormd.css"/>
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
+    <script src="/static/editor/js/jquery.min.js"></script>
+    <script src="/static/editor/js/editormd.min.js"></script>
+
+    <!--  markdown数据回显js代码  -->
+    <script src="/static/editor/lib/marked.min.js"></script>
+    <script src="/static/editor/lib/prettify.min.js"></script>
+    <script src="/static/editor/lib/raphael.min.js"></script>
+    <script src="/static/editor/lib/underscore.min.js"></script>
+    <script src="/static/editor/lib/sequence-diagram.min.js"></script>
+    <script src="/static/editor/lib/flowchart.min.js"></script>
+    <script src="/static/editor/lib/jquery.flowchart.min.js"></script>
+
+
 </head>
 <body>
 <!--页头-->
 <header>
     <div class="content">
         <!--logo-->
-        <img src="Images/logo.png" alt="" class="logo">
+        <img src="/static/Images/logo.png" alt="" class="logo">
         <!--导航-->
         <ul class="navLink">
-            <li><a href="main">首页</a></li>
-            <li><a href="index/work">援藏工作</a></li>
-            <li><a href="index/policy">援藏政策</a></li>
-            <li><a href="index/need">援藏需求</a></li>
-            <li><a href="index/process">援藏路径</a></li>
-            <li><a href="index/school">援藏高校</a></li>
-            <!-- <li><a href="index/work">工作动态</a></li> -->
-            <li><a href="index/adver">人员招聘</a></li>
+            <li><a href="/main">首页</a></li>
+            <li><a href="/index/work">援藏工作</a></li>
+            <li><a href="/index/policy">援藏政策</a></li>
+            <li><a href="/index/need">援藏需求</a></li>
+            <li><a href="/index/process">援藏路径</a></li>
+            <li><a href="/index/school">援藏高校</a></li>
+            <!-- <li><a href="/index/work">工作动态</a></li> -->
+            <li><a href="/index/adver">人员招聘</a></li>
         </ul>
         <!--登陆-->
-        <c:choose>
-            <c:when test="${manager == null}">
-                <a href="login.html" class="login"> <!--<span></span>-->登陆
-                </a>
-            </c:when>
-            <c:otherwise>
-                欢迎您：${manager.userName}<a href="index.jsp" class="login"> <!--<span></span>-->前往后台
+
+        <th:block th:if="${session.loginUser == null}">
+            <a href="login.html" class="login"> <!--<span></span>-->登陆
             </a>
-            </c:otherwise>
-        </c:choose>
+        </th:block>
+        <th:block th:if="${session.loginUser != null}">
+            欢迎您：<th:block th:text="${session.loginUser.userName}"></th:block></th:text><a href="/user/index" class="login"> <!--<span></span>-->前往后台
+        </a>
+        </th:block>>
     </div>
 </header>
 <!--内容-->
 <div id="detail">
     <!--顶部面包屑-->
     <div class="crumbs content">
-        <a href="index/school">援藏高校</a> <img src="Images/right.png" alt="">
-        <a href="index/toSchoolShow/${school.id }">高校详情</a>
+        <a href="/index/school">援藏高校</a> <img src="/static/Images/right.png" alt="">
+        <a th:href="@{'/index/toSchoolShow?id=' + ${school.id}}">高校详情</a>
     </div>
     <div class="detail content">
         <div class="detail-left">
             <div class="detail-left-top" style="height: 100px;">
-                <h1>${school.schName }</h1>
+                <h1><th:block th:text="${school.schoolName}"></th:block></h1>
             </div>
             <div class="detail-left-bottom">
                 <p>
                     需要援助:
-                    <c:choose>
-                        <c:when test="${school.recSchool eq 1}">
-                            是
-                        </c:when>
-                        <c:otherwise>
-                            否
-                        </c:otherwise>
-                    </c:choose>
+                    <th:block th:if="${school.isNeed == '1' }" th:text="是"></th:block>
+                    <th:block th:if="${school.isNeed == '0' }" th:text="否"></th:block>
                 </p>
                 <p>
                     前往援助:
-                    <c:choose>
-                        <c:when test="${school.isZup eq 1}">
-                            是
-                        </c:when>
-                        <c:otherwise>
-                            否
-                        </c:otherwise>
-                    </c:choose>
+                    <th:block th:if="${school.isGo == '1' }" th:text="是"></th:block>
+                    <th:block th:if="${school.isGo == '0' }" th:text="否"></th:block>
                 </p>
                 <p>
                     详细信息:
                 </p>
                 <p>
-                    ${school.message }
+                <div id="profile-editormd">
+                        <textarea class="editormd-markdown-textarea" name="profile" style="display: none;"><th:block
+                                th:text="${school.profile}"></th:block></textarea>
+                </div>
                 </p>
                 <p>
                     援藏历史:
                 </p>
                 <p>
-                    ${school.supHistory }
+                <div id="history-editormd">
+                        <textarea class="editormd-markdown-textarea" name="profile" style="display: none;"><th:block
+                                th:text="${school.history}"></th:block></textarea>
+                </div>
                 </p>
             </div>
         </div>
         <div class="detail-right">
             <h3>其它学校</h3>
             <ul>
-                <c:forEach items="${schools }" var="a">
+                <th:block th:each="schools : ${pageUtil.data}" >
                     <li>
                         <h5
                                 style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <a href="index/toSchoolShow/${a.id }">${a.schName }</a>
+                            <a th:href="@{'/index/toSchoolShow?id=' + ${schools.id}}"><th:block th:text="${schools.schoolName}"></th:block></a>
                         </h5>
 
                     </li>
-                </c:forEach>
+                </th:block>
             </ul>
         </div>
     </div>
@@ -107,7 +117,7 @@
 <footer>
     <div class="content">
         <div class="footer-blue">
-            <img src="Images/blue.png" alt="">
+            <img src="/static/Images/blue.png" alt="">
         </div>
         <div class="footerContent">
             <p>
@@ -115,18 +125,50 @@
                     style="height: 20px; line-height: 20px; text-decoration: none;"
                     target="_blank"
                     href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=54010202000088"><img
-                    src="Images/beiantubiao.png">藏公网安备54010202000088号</a>
+                    src="/static/Images/beiantubiao.png">藏公网安备54010202000088号</a>
             </p>
             <p>
-                地址：西藏自治区拉萨市城关区藏大东路10号 邮政编码：850000 <img src="Images/pic1.gif" alt="">
+                地址：西藏自治区拉萨市城关区藏大东路10号 邮政编码：850000 <img src="/static/Images/pic1.gif" alt="">
             </p>
             <p>达内时代科技集团提供技术支持</p>
         </div>
         <div class="QrCode">
-            <img src="Images/app.jpg" alt="">
+            <img src="/static/Images/app.jpg" alt="">
         </div>
     </div>
 </footer>
-<script src="Js/jquery-1.11.1.min.js"></script>
+<script src="/static/Js/jquery.js"></script>
+
+<script>
+
+    // 数据回显
+    $(function () {
+        editormd.markdownToHTML("profile-editormd", {
+            htmlDecode: "style,script,iframe",
+
+            emoji: true,
+            taskList: true,
+            tex: true, // 默认不解析
+            flowChart: true, // 默认不解析
+            sequenceDiagram: true, // 默认不解析
+            codeFold: true
+        });
+    });
+
+    // 援藏历史数据回显
+    $(function () {
+        editormd.markdownToHTML("history-editormd", {
+            htmlDecode: "style,script,iframe",
+
+            emoji: true,
+            taskList: true,
+            tex: true, // 默认不解析
+            flowChart: true, // 默认不解析
+            sequenceDiagram: true, // 默认不解析
+            codeFold: true
+        });
+    });
+</script>
+
 </body>
 </html>

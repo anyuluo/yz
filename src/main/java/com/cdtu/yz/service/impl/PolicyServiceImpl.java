@@ -62,4 +62,9 @@ public class PolicyServiceImpl implements PolicyService {
 
         return pageUtil;
     }
+
+    @Override
+    public void incrementCount(String fileName) {
+        policyDao.incrementCount(fileName);
+    }
 }

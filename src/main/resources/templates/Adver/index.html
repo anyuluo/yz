@@ -5,13 +5,13 @@
     <base href="${pageContext.request.contextPath}/" />
     <title></title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="./Css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="./Css/bootstrap-responsive.css" />
-    <link rel="stylesheet" type="text/css" href="./Css/style.css" />
-    <script type="text/javascript" src="./Js/jquery.js"></script>
-    <script type="text/javascript" src="./Js/bootstrap.js"></script>
-    <script type="text/javascript" src="./Js/ckform.js"></script>
-    <script type="text/javascript" src="./Js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="/static/Css/style.css" />
+    <script type="text/javascript" src="/static/Js/jquery.js"></script>
+    <script type="text/javascript" src="/static/Js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/Js/ckform.js"></script>
+    <script type="text/javascript" src="/static/Js/common.js"></script>
 
     <style type="text/css">
         body {
@@ -40,7 +40,7 @@
       method="get">
     标题： <input type="text" name="param" id="param"
                class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
-    <button type="submit" class="btn btn-primary">查询</button>
+    <button type="button" class="btn btn-primary" id="search">查询</button>
     &nbsp;&nbsp;
     <button type="button" class="btn btn-success" id="addnew">新增需求</button>
 </form>
@@ -56,33 +56,115 @@
         <th>操作</th>
     </tr>
     </thead>
+    <th:block th:each="adver : ${adverPage.data}">
     <tr>
-        <td>1001</td>
+        <td><th:block th:text="${adver.id}"></th:block></td>
         <td style="max-width: 220px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-            <a title="点击查看详情" href="#">测试标题</a>
+            <a title="点击查看详情" href="#"><th:block th:text="${adver.title}"></th:block></a>
         </td>
         <td style="max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-            北京大学
+            <th:block th:text="${adver.schoolName}"></th:block>
         </td>
-        <td>0</td>
-        <td>2018-04-20 08:00:00</td>
-        <td>admin</td>
+        <td><th:block th:text="${adver.count}"></th:block></td>
+        <td><th:block th:text="${adver.createTime}"></th:block></td>
+        <td><th:block th:text="${adver.editor}"></th:block></td>
         <td>
-            <a class="option-button" href="#">编辑</a>
-            |<a class="option-button" href="#">删除</a>
-            |<a class="option-button" href="#">查看</a>
+            <a class="option-button" th:href="@{'/adver/to-edit/' + ${adver.id}}">编辑</a>
+            |<a class="option-button del" th:onclick="'javascript: delInfo('+ ${adver.id} + ')'">删除</a>
+            |<a class="option-button" th:href="@{'/adver/show/' + ${adver.id}}">查看</a>
         </td>
     </tr>
+    </th:block>
 </table>
+<!--//分页的实现-->
 <div class="inline pull-right page">
-    10 条记录 1/2页
-    <a href='#'>首页</a>
-    <a href='#'>上一页</a>
-    <a href='#'>下一页</a>
-    <a href='#'>尾页</a>
+    <th:block th:text="${adverPage.totalCount}"></th:block>
+    条记录
+    <th:block th:text="${adverPage.currPage}"></th:block>
+    /
+    <th:block th:text="${adverPage.totalPage}"></th:block>
+    页
+    <a href='/adver/list/1'>首页</a>
+    <!--<a href='#'>上一页</a>-->
+    <!--<a href='#'>下一页</a>-->
+    <!--<a href='#'>尾页</a>-->
+
+    <th:block th:if="${null != adverPage}">
+        <span th:class="${adverPage.currPage==1}?'disabled' : ''">
+            <a th:href="@{${adverPage.currPage==1}?'##':'/adver/list/' + ${adverPage.currPage-1}}">&laquo;</a>
+        </span>
+        <span th:if="${adverPage.currPage-3 >=1}"><a
+                th:href="@{'/adver/list/' + ${adverPage.currPage-3}}"
+                th:text="${adverPage.currPage -3}">1</a></span>
+        <span th:if="${adverPage.currPage-2 >=1}"><a
+                th:href="@{'/adver/list/' + ${adverPage.currPage-2}}"
+                th:text="${adverPage.currPage -2}">1</a></span>
+        <span th:if="${adverPage.currPage-1 >=1}"><a
+                th:href="@{'/adver/list/' + ${adverPage.currPage-1}}"
+                th:text="${adverPage.currPage -1}">1</a></span>
+        <span class="active"><a href="#" th:text="${adverPage.currPage}">1</a></span>
+        <span th:if="${adverPage.currPage+1 <=adverPage.totalPage}"><a
+                th:href="@{'/adver/list/' + ${adverPage.currPage+1}}"
+                th:text="${adverPage.currPage +1}">1</a></span>
+        <span th:if="${adverPage.currPage+2 <=adverPage.totalPage}"><a
+                th:href="@{'/adver/list/' + ${adverPage.currPage+2}}"
+                th:text="${adverPage.currPage +2}">1</a></span>
+        <span th:if="${adverPage.currPage+3 <=adverPage.totalPage}"><a
+                th:href="@{'/adver/list/' + ${adverPage.currPage+3}}"
+                th:text="${adverPage.currPage +3}">1</a></span>
+        <span th:class="${adverPage.currPage==adverPage.totalPage}?'disabled' : ''"><a
+                th:href="@{${adverPage.currPage==adverPage.totalPage}?'##' : '/adver/list/' + ${adverPage.currPage+1}}">&raquo;</a>
+                </span>
+    </th:block>
+    <a th:href="@{'/adver/list/' +${adverPage.totalPage}}">尾页</a>
 </div>
+
+
 </body>
 <script>
+    $('#addnew').click(function () {
+        window.location.href = '/adver/to-add'
+    });
+
+    // 点击查询
+    $('#search').click(function () {
+        var param = $('#param').val();
+        if (param != "") {
+            window.location.href = '/adver/search?param=' + param
+        }else {
+            alert("请输入用户名！");
+            $('#param').focus;
+        }
+
+    });
+
+    //点击删除
+    function delInfo(id) {
+
+        //利用对话框返回的值 （true 或者 false）
+        if (confirm("您将删除编号为：" + id + "的人才引进信息，确认删除？")) {
+            $.ajax({
+                type: "get",
+                url: "/adver/del",
+                data: { "id": id },
+                success: function (data) {
+                    if (data == "success") {
+                        alert('删除成功！');
+                        window.location.href = '/adver/list/1'
+                    }else {
+                        alert('删除失败！');
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                },
+                complete: function () {
+
+                }
+            });
+        }
+
+    }
 
 </script>
 </html>

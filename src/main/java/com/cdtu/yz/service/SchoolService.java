@@ -61,4 +61,11 @@ public interface SchoolService {
      * @return
      */
     boolean isExist(String schoolName);
+
+    /**
+     * 通过id删除
+     * @param id
+     * @return
+     */
+    boolean delSchool(Integer id);
 }

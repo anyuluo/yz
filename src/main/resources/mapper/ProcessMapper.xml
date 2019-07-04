@@ -78,36 +78,36 @@
         select * from process limit #{start}, #{pageSize}
     </select>
 
-    <!--&lt;!&ndash;  修改用户信息  &ndash;&gt;-->
-    <!--<update id="editPolicy" parameterType="com.cdtu.yz.entity.Policy">-->
-        <!--update policy set-->
-        <!--<trim prefix="" suffix="where id = #{id}" suffixOverrides=",">-->
-            <!--<if test="title != null">-->
-                <!--title=#{title},-->
-            <!--</if>-->
-            <!--<if test="editor != null">-->
-                <!--editor=#{editor},-->
-            <!--</if>-->
-            <!--<if test="content != null">-->
-                <!--content=#{content},-->
-            <!--</if>-->
-            <!--<if test="filePath != null">-->
-                <!--filePath=#{filePath},-->
-            <!--</if>-->
-            <!--<if test="createTime != null">-->
-                <!--createTime=#{createTime},-->
-            <!--</if>-->
-            <!--<if test="count != null">-->
-                <!--count=#{count},-->
-            <!--</if>-->
-            <!--<if test="status != null">-->
-                <!--status=#{status},-->
-            <!--</if>-->
-            <!--<if test="reserve != null">-->
-                <!--reserve=#{reserve},-->
-            <!--</if>-->
-        <!--</trim>-->
-    <!--</update>-->
+    <!--  修改援藏路线信息  -->
+    <update id="updateProcess" parameterType="com.cdtu.yz.entity.Process">
+        update process set
+        <trim prefix="" suffix="where id = #{id}" suffixOverrides=",">
+            <if test="processName != null">
+                processName=#{processName},
+            </if>
+            <if test="schoolName != null">
+                schoolName=#{schoolName},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="detail != null">
+                detail=#{detail},
+            </if>
+            <if test="createTime != null">
+                createTime=#{createTime},
+            </if>
+            <if test="creator != null">
+                creator=#{creator},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="reserve != null">
+                reserve=#{reserve},
+            </if>
+        </trim>
+    </update>
 
     <!---->
     <!--&lt;!&ndash;  删除用户 &ndash;&gt;-->
@@ -202,5 +202,9 @@
             <!--</if>-->
         <!--</trim>-->
     <!--</insert>-->
+
+    <delete id="delProcess" parameterType="java.lang.Integer">
+        delete from process where id=#{id}
+    </delete>
 
 </mapper>

@@ -134,6 +134,14 @@ public class SchoolController {
         return "School/show";
     }
 
+    @RequestMapping("/del")
+    @ResponseBody
+    public String del(Integer id){
+        if (schoolService.delSchool(id)){
+            return "success";
+        }
+        return "false";
 
+    }
 
 }

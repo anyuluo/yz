@@ -1,13 +1,11 @@
-
-    
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<!--<base href="${pageContext.request.contextPath}/"/>-->
+    <!--<base href="${pageContext.request.contextPath}/"/>-->
     <title>援藏平台后台系统</title>
-    <link href="/static/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
-    <link href="/static/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
-    <link href="/static/assets/css/main-min.css" rel="stylesheet" type="text/css" />
+    <link href="/static/assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/assets/css/main-min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 
@@ -17,17 +15,24 @@
         <!--<img src="/chinapost/Public/assets/img/top.png">-->
     </div>
 
-    <div class="dl-log">欢迎您，<span class="dl-log-user">admin</span>
-    <a href="#" id="logout" title="退出系统" class="dl-log-quit">[退出]</a>
-    <a id="main-button" title="回到首页" class="dl-log-quit">[首页]</a>
+    <div class="dl-log">欢迎您，<span class="dl-log-user"><th:block
+            th:text="${session.loginUser.userName}"></th:block></span>
+        <a href="/user/loginOut" id="logout" title="退出系统" class="dl-log-quit">[退出]</a>
+        <a href="/" id="main-button" title="回到首页" class="dl-log-quit">[首页]</a>
     </div>
 </div>
 <div class="content">
     <div class="dl-main-nav">
-        <div class="dl-inform"><div class="dl-inform-title"><s class="dl-inform-icon dl-up"></s></div></div>
-        <ul id="J_Nav"  class="nav-list ks-clear">
-            <li class="nav-item dl-selected"><div class="nav-item-inner nav-home">系统管理</div></li>
-            <li class="nav-item dl-selected"><div class="nav-item-inner nav-order">业务管理</div></li>
+        <div class="dl-inform">
+            <div class="dl-inform-title"><s class="dl-inform-icon dl-up"></s></div>
+        </div>
+        <ul id="J_Nav" class="nav-list ks-clear">
+            <li class="nav-item dl-selected">
+                <div class="nav-item-inner nav-home">系统管理</div>
+            </li>
+            <li class="nav-item dl-selected">
+                <div class="nav-item-inner nav-order">业务管理</div>
+            </li>
 
         </ul>
     </div>
@@ -39,55 +44,137 @@
 <script type="text/javascript" src="/static/assets/js/bui-min.js"></script>
 <script type="text/javascript" src="/static/assets/js/common/main-min.js"></script>
 <script type="text/javascript" src="/static/assets/js/config-min.js"></script>
-<script>
-    BUI.use('common/main',function(){
+<script th:inline="javascript">
+    BUI.use('common/main', function () {
         var config = [
-		{id:'1',menu:[
-			{text:'系统管理',
-				items:[
-					{id:'2',text:'菜单管理',href:'#'},
-					{id:'3',text:'角色管理',href:'#'},
-					{id:'4',text:'权限管理',href:'#'},
-					{id:'6',text:'管理员管理',href:'list/1'}
-				]
-			},
-			{text:'援藏高校',
-				items:[
-					{id:'5',text:'学校管理',href:'/school/list/1'},
-					{id:'6',text:'需求管理',href:'#'}
-				]
-			},
-			{text:'援藏工作',
-				items:[
-					{id:'7',text:'路线管理',href:'/process/list/1'},
-					{id:'8',text:'工作动态',href:'#'},
-					{id:'9',text:'援藏政策',href:'/policy/list/1'}
-				]
-			},		
-      		{text:'招聘管理',
-	  			items:[
-	  				{id:'10',text:'援藏人员',href:'#'},
-	  				{id:'11',text:'人才引进',href:'#'}
-	  			]
-      		}
-		]},
-		{id:'7',homePage : '9',menu:[
-			{text:'业务管理',
-				items:[
-					{id:'9',text:'查询业务',href:'#'}
-				]
-			}
-		]}
-	  ];
+            {
+                id: 'menu', menu: [
+                    {
+                        text: '系统管理',
+                        items: [
+                            // {id:'2',text:'菜单管理',href:'#'},
+                            // {id:'3',text:'角色管理',href:'#'},
+                            // {id:'4',text:'权限管理',href:'#'},
+                            // {id:'6',text:'管理员管理',href:'/user/list/1'}
+                        ]
+                    },
+                    {
+                        text: '援藏高校',
+                        items: [
+                            // {id:'5',text:'学校管理',href:'/school/list/1'},
+                            // {id:'6',text:'需求管理',href:'#'}
+                        ]
+                    },
+                    {
+                        text: '援藏工作',
+                        items: [
+                            // {id:'7',text:'路线管理',href:'/process/list/1'},
+                            // {id:'8',text:'工作动态',href:'#'},
+                            // {id:'9',text:'援藏政策',href:'/policy/list/1'}
+                        ]
+                    },
+                    {
+                        text: '招聘管理',
+                        items: [
+                            // {id:'10',text:'援藏人员',href:'#'},
+                            // {id:'11',text:'人才引进',href:'/adver/list/1'}
+                        ]
+                    }
+                ]
+            },
+            {
+                id: '7', homePage: '9', menu: [
+                    {
+                        text: '业务管理',
+                        items: [
+                            {id: '9', text: '查询业务', href: '#'}
+                        ]
+                    }
+                ]
+            }
+        ];
+
+
+        var menus = [[${menus }]];
+        // 将列表数据转化为json格式的数据
+        menus = eval(menus);
+        // console.log(menus);
+
+        for (var i = 0; i < menus.length; i++) {
+            switch (menus[i].menuType) {
+                case '系统管理':
+                    var item = {
+                        id: menus[i].id,
+                        text: menus[i].menuName,
+                        href: menus[i].url
+                    };
+                    config[0].menu[0].items.push(item);
+                    break;
+                case '援藏高校':
+                    var item = {
+                        id: menus[i].id,
+                        text: menus[i].menuName,
+                        href: menus[i].url
+                    };
+                    config[0].menu[1].items.push(item);
+                    break;
+                case '援藏工作':
+                    var item = {
+                        id: menus[i].id,
+                        text: menus[i].menuName,
+                        href: menus[i].url
+                    };
+                    config[0].menu[2].items.push(item);
+                    break;
+                case '招聘管理':
+                    var item = {
+                        id: menus[i].id,
+                        text: menus[i].menuName,
+                        href: menus[i].url
+                    };
+                    config[0].menu[3].items.push(item);
+            }
+
+            // if (menus[i].menuType === "系统管理") {
+            //     var item = {
+            //         id: menus[i].id,
+            //         text: menus[i].menuName,
+            //         href: menus[i].url
+            //     };
+            //     config[0].menu[0].items.push(item);
+            // } else if (menus[i].menuType === "援藏高校") {
+            //     var item = {
+            //         id: menus[i].id,
+            //         text: menus[i].menuName,
+            //         href: menus[i].url
+            //     };
+            //     config[0].menu[1].items.push(item);
+            // } else if (menus[i].menuType === "援藏工作") {
+            //     var item = {
+            //         id: menus[i].id,
+            //         text: menus[i].menuName,
+            //         href: menus[i].url
+            //     };
+            //     config[0].menu[2].items.push(item);
+            // } else if (menus[i].menuType === "招聘管理") {
+            //     var item = {
+            //         id: menus[i].id,
+            //         text: menus[i].menuName,
+            //         href: menus[i].url
+            //     };
+            //     config[0].menu[3].items.push(item);
+            // }
+        }
+
         new PageUtil.MainPage({
-            modulesConfig : config
+            modulesConfig: config
         });
     });
-    
-    
+
+
 </script>
 <div style="text-align:center;">
-<p>来源：<a href="http://www.tedu.cn/" target="_blank">达内科技</a></p>
+    <p>来源：<a href="http://www.tedu.cn/" target="_blank">达内科技</a></p>
 </div>
 </body>
 </html>

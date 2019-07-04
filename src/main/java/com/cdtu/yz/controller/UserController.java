@@ -1,6 +1,9 @@
 package com.cdtu.yz.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.cdtu.yz.common.PageUtil;
+import com.cdtu.yz.entity.Menu;
 import com.cdtu.yz.entity.User;
 import com.cdtu.yz.service.AuthService;
 import com.cdtu.yz.service.SchoolService;
@@ -12,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -37,16 +45,28 @@ public class UserController {
 
     /**
      * 用户登录
-     * @param username
+     * @param userName
      * @param password
+     * @param session
      * @return
      */
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public String login(String username, String password){
+    public String login(HttpSession session, String userName, String password){
 
-        return userService.login(username, password) ? "success" : "fail";
+        User user = userService.login(userName, password);
+
+        session.setAttribute("loginUser", user);
+
+        return user != null ? "success" : "fail";
+    }
+
+    @RequestMapping("/loginOut")
+    public void loginOut(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        session.removeAttribute("loginUser");
+        response.sendRedirect(request.getContextPath() + "/login.html");
+//        return "login";
     }
 
     /**
@@ -54,7 +74,16 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(){
+    public String index(Model model, HttpSession session){
+        // 获取登录的用户信息
+        User user = (User)  session.getAttribute("loginUser");
+        // 查询菜单信息
+        List<Menu> menus = userService.getUserMenu(user);
+        // 数据转换为json
+//        JSONArray jsonMenus = JSONArray.parseArray(JSON.toJSONString(menus));
+        // 数据封装
+        model.addAttribute("menus", JSONArray.parseArray(JSON.toJSONString(menus)));
+
         return "index";
     }
 
@@ -95,8 +124,10 @@ public class UserController {
      * @param user
      * @return
      */
-    @RequestMapping("/adduser")
-    public String addUser(User user){
+    @RequestMapping(value = "/add-user", method = RequestMethod.POST)
+    public String addUser(User user, HttpSession session){
+        // 设置创建者信息
+        user.setCreator(((User) session.getAttribute("loginUser")).getCreator());
 
         // 添加用户信息
         userService.addUser(user);

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdtu.yz.dao.RecruitDao">
+
+    <!--  添加人才引进信息  -->
+    <insert id="insert" parameterType="com.cdtu.yz.entity.Recruit">
+        insert into recruit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="schoolName != null">
+                schoolName,
+            </if>
+            <if test="editor != null">
+                editor,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="reserve != null">
+                reserve,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="schoolName != null">
+                #{schoolName},
+            </if>
+            <if test="editor != null">
+                #{editor},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="count != null">
+                #{count},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="reserve != null">
+                #{reserve},
+            </if>
+        </trim>
+    </insert>
+
+    <!--  通过id查询人才引进的信息  -->
+    <select id="getRecruitById" parameterType="java.lang.Integer" resultType="com.cdtu.yz.entity.Recruit">
+        select * from recruit where id= #{id}
+    </select>
+
+
+    <!--  通过高校名字查询学校的信息  -->
+    <select id="getRecruitByTitle" parameterType="java.lang.String" resultType="com.cdtu.yz.entity.Recruit">
+        select * from recruit where title= #{title}
+    </select>
+
+    <!--&lt;!&ndash;  查询所有的学校信息  &ndash;&gt;-->
+    <!--<select id="getSchoolAll" resultType="com.cdtu.yz.entity.User">-->
+        <!--select * from school-->
+    <!--</select>-->
+
+    <!--  查询学校人才引进数据的总条数  -->
+    <select id="getAdeverCount" resultType="java.lang.Integer">
+        select count(*) from recruit
+    </select>
+
+    <!--  学校人才引进信息分页查询  -->
+    <select id="getAdverPage" parameterType="com.cdtu.yz.common.PageUtil" resultType="com.cdtu.yz.entity.Recruit">
+        select * from recruit limit #{start}, #{pageSize}
+    </select>
+
+    <!--  更新高校数据信息  -->
+    <update id="updateRecruit" parameterType="com.cdtu.yz.entity.Recruit">
+        update recruit set
+        <trim prefix="" suffix="where id = #{id}" suffixOverrides=",">
+            <if test="title != null">
+                title=#{title},
+            </if>
+
+            <if test="schoolName != null">
+                schoolName=#{schoolName},
+            </if>
+            <if test="editor != null">
+                editor=#{editor},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="createTime != null">
+                createTime=#{createTime},
+            </if>
+            <if test="createTime != null">
+                createTime=#{createTime},
+            </if>
+            <if test="count != null">
+                count=#{count},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="reserve != null">
+                status=#{reserve},
+            </if>
+        </trim>
+
+    </update>
+
+    <delete id="delRecruitById" parameterType="java.lang.Integer">
+        delete from recruit where id=#{id}
+    </delete>
+
+    <!--  修改援藏需求的文章的阅读量  -->
+    <update id="incrementCount" parameterType="java.lang.Integer">
+        update recruit set count = count + 1 where id = #{id}
+    </update>
+
+    <!--  学校人最新才引进信息  -->
+    <select id="getRecruitList" parameterType="int" resultType="com.cdtu.yz.entity.Recruit">
+        select * from recruit limit #{count}, 5
+    </select>
+</mapper>

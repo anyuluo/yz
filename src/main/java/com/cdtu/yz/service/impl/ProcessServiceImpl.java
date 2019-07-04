@@ -34,6 +34,9 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public boolean addProcess(Process process) {
+        //将字符串右面多余的 - 字符去掉
+        process.setDetail(process.getDetail().substring(0, process.getDetail().length() - 2));
+
         //设置时间戳
         process.setCreateTime(DateUtil.now());
 
@@ -43,5 +46,17 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     public Process getProcessById(Integer id) {
         return processDao.getProcessById(id);
+    }
+
+    @Override
+    public boolean updateProcess(Process process) {
+        // 将路线最后多余的 - 字符去掉
+        process.setDetail(process.getDetail().substring(0, process.getDetail().length() -2));
+        return processDao.updateProcess(process);
+    }
+
+    @Override
+    public boolean delProcess(Integer id) {
+        return processDao.delProcess(id);
     }
 }

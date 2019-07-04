@@ -14,7 +14,7 @@ public class PageUtil {
     // 总记录数
     private Integer totalCount;
     // 每页数据量
-    private Integer pageSize = 1;  // 设置页面的数据量为3
+    private Integer pageSize = 3;  // 设置页面的数据量为3
     // 总页数
     private Integer totalPage;
     // 当前页

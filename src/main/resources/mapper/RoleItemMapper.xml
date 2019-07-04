@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdtu.yz.dao.RoleItemDao">
+
+    <!--&lt;!&ndash;  添加用户信息  &ndash;&gt;-->
+    <!--<insert id="insert" parameterType="com.cdtu.yz.entity.User">-->
+        <!--insert into user-->
+        <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+            <!--<if test="userName != null">-->
+                <!--userName,-->
+            <!--</if>-->
+            <!--<if test="password != null">-->
+                <!--password,-->
+            <!--</if>-->
+            <!--<if test="sex != null">-->
+                <!--sex,-->
+            <!--</if>-->
+            <!--<if test="tel != null">-->
+                <!--tel,-->
+            <!--</if>-->
+            <!--<if test="qq != null">-->
+                <!--qq,-->
+            <!--</if>-->
+            <!--<if test="email != null">-->
+                <!--email,-->
+            <!--</if>-->
+            <!--<if test="schoolId != null">-->
+                <!--schoolId,-->
+            <!--</if>-->
+            <!--<if test="schoolName != null">-->
+                <!--schoolName,-->
+            <!--</if>-->
+            <!--<if test="role != null">-->
+                <!--role,-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--createTime,-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--creator,-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--status,-->
+            <!--</if>-->
+            <!--<if test="reserve != null">-->
+                <!--reserve,-->
+            <!--</if>-->
+        <!--</trim>-->
+        <!--<trim prefix="values (" suffix=")" suffixOverrides=",">-->
+            <!--<if test="userName != null">-->
+                <!--#{userName},-->
+            <!--</if>-->
+            <!--<if test="password != null">-->
+                <!--#{password},-->
+            <!--</if>-->
+            <!--<if test="sex != null">-->
+                <!--#{sex},-->
+            <!--</if>-->
+            <!--<if test="tel != null">-->
+                <!--#{tel},-->
+            <!--</if>-->
+            <!--<if test="qq != null">-->
+                <!--#{qq},-->
+            <!--</if>-->
+            <!--<if test="email != null">-->
+                <!--#{email},-->
+            <!--</if>-->
+            <!--<if test="schoolId != null">-->
+                <!--#{schoolId},-->
+            <!--</if>-->
+            <!--<if test="schoolName != null">-->
+                <!--#{schoolName},-->
+            <!--</if>-->
+            <!--<if test="role != null">-->
+                <!--#{role},-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--#{createTime},-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--#{creator},-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--#{status},-->
+            <!--</if>-->
+            <!--<if test="reserve != null">-->
+                <!--#{reserve},-->
+            <!--</if>-->
+        <!--</trim>-->
+    <!--</insert>-->
+    <insert id="insetByRoleId" parameterType="com.cdtu.yz.entity.RoleItem">
+        insert into role_item(roleId, menuId) values (#{roleId}, #{menuId})
+    </insert>
+
+    <!--&lt;!&ndash;  通过用户名查询用户的信息  &ndash;&gt;-->
+    <!--<select id="getUserByName" parameterType="java.lang.String" resultType="com.cdtu.yz.entity.User">-->
+        <!--select * from user where username = #{username}-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;  通过用户名查询用户的信息  &ndash;&gt;-->
+    <!--<select id="getRoleById" parameterType="java.lang.Integer" resultType="com.cdtu.yz.entity.Role">-->
+        <!--select * from role where id= #{id}-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;  查询所有的用户信息  &ndash;&gt;-->
+    <!--<select id="getRoleAll" resultType="com.cdtu.yz.entity.Role">-->
+        <!--select * from role-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;  查询用户数据的总条数  &ndash;&gt;-->
+    <!--<select id="getRoleCount" resultType="int">-->
+        <!--select count(*) from role-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;  &ndash;&gt;-->
+    <!--<select id="getUserPage" parameterType="com.cdtu.yz.common.PageUtil" resultType="com.cdtu.yz.entity.User">-->
+        <!--select * from user limit #{start}, #{pageSize}-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;  修改用户信息  &ndash;&gt;-->
+    <!--<update id="updateUser" parameterType="com.cdtu.yz.entity.User">-->
+        <!--update user set-->
+        <!--<trim prefix="" suffix="where id = #{id}" suffixOverrides=",">-->
+            <!--<if test="userName != null">-->
+                <!--userName=#{userName},-->
+            <!--</if>-->
+
+            <!--<if test="password != null">-->
+                <!--password=#{password},-->
+            <!--</if>-->
+            <!--<if test="sex != null">-->
+                <!--sex=#{sex},-->
+            <!--</if>-->
+            <!--<if test="tel != null">-->
+                <!--tel=#{tel},-->
+            <!--</if>-->
+            <!--<if test="qq != null">-->
+                <!--qq=#{qq},-->
+            <!--</if>-->
+            <!--<if test="email != null">-->
+                <!--email=#{email},-->
+            <!--</if>-->
+            <!--<if test="schoolId != null">-->
+                <!--schoolId=#{schoolId},-->
+            <!--</if>-->
+            <!--<if test="schoolName != null">-->
+                <!--schoolName=#{schoolName},-->
+            <!--</if>-->
+            <!--<if test="role != null">-->
+                <!--role=#{role},-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--createTime=#{createTime},-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--creator=#{creator},-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--status=#{status},-->
+            <!--</if>-->
+            <!--<if test="reserve != null">-->
+                <!--reserve=#{reserve},-->
+            <!--</if>-->
+        <!--</trim>-->
+
+    <!--</update>-->
+
+    <!---->
+    <!--  清除当前用户角色的所有的权限信息 -->
+    <delete id="delRoleByRoleId" parameterType="java.lang.Integer">
+        delete from role_item where roleId = #{roleId}
+    </delete>
+
+    <!--&lt;!&ndash;  添加删除的用户信息  &ndash;&gt;-->
+    <!--<insert id="insertDel" parameterType="com.cdtu.yz.entity.User">-->
+        <!--insert into user_del-->
+        <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+            <!--<if test="userName != null">-->
+                <!--userName,-->
+            <!--</if>-->
+            <!--<if test="password != null">-->
+                <!--password,-->
+            <!--</if>-->
+            <!--<if test="sex != null">-->
+                <!--sex,-->
+            <!--</if>-->
+            <!--<if test="tel != null">-->
+                <!--tel,-->
+            <!--</if>-->
+            <!--<if test="qq != null">-->
+                <!--qq,-->
+            <!--</if>-->
+            <!--<if test="email != null">-->
+                <!--email,-->
+            <!--</if>-->
+            <!--<if test="schoolId != null">-->
+                <!--schoolId,-->
+            <!--</if>-->
+            <!--<if test="schoolName != null">-->
+                <!--schoolName,-->
+            <!--</if>-->
+            <!--<if test="role != null">-->
+                <!--role,-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--createTime,-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--creator,-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--status,-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--reserve,-->
+            <!--</if>-->
+        <!--</trim>-->
+        <!--<trim prefix="values (" suffix=")" suffixOverrides=",">-->
+            <!--<if test="userName != null">-->
+                <!--#{userName},-->
+            <!--</if>-->
+            <!--<if test="password != null">-->
+                <!--#{password},-->
+            <!--</if>-->
+            <!--<if test="sex != null">-->
+                <!--#{sex},-->
+            <!--</if>-->
+            <!--<if test="tel != null">-->
+                <!--#{tel},-->
+            <!--</if>-->
+            <!--<if test="qq != null">-->
+                <!--#{qq},-->
+            <!--</if>-->
+            <!--<if test="email != null">-->
+                <!--#{email},-->
+            <!--</if>-->
+            <!--<if test="schoolId != null">-->
+                <!--#{schoolId},-->
+            <!--</if>-->
+            <!--<if test="schoolName != null">-->
+                <!--#{schoolName},-->
+            <!--</if>-->
+            <!--<if test="role != null">-->
+                <!--#{role},-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--#{createTime},-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--#{creator},-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--#{status},-->
+            <!--</if>-->
+            <!--<if test="createTime != null">-->
+                <!--#{reserve},-->
+            <!--</if>-->
+        <!--</trim>-->
+    <!--</insert>-->
+
+
+    <!--&lt;!&ndash;  查询菜单权限信息  &ndash;&gt;-->
+    <!--<select id="getMenuByRoleName" parameterType="java.lang.String" resultType="com.cdtu.yz.entity.Menu">-->
+        <!--SELECT menu.* from menu WHERE id in (SELECT menuId FROM role_item WHERE roleId = (SELECT id from role where roleName=#{role}))-->
+
+    <!--</select>-->
+</mapper>

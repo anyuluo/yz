@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdtu.yz.dao.NeedDao">
+
+    <delete id="delNeed" parameterType="com.cdtu.yz.entity.Need">
+        delete from need where id = #{id}
+    </delete>
+    <!--查看所有的需求-->
+    <select id="getNeedAll" resultType="com.cdtu.yz.entity.Need">
+        select * from need
+    </select>
+
+    <!--  查询需求数据的总条数  -->
+    <select id="getNeedCount" resultType="java.lang.Integer">
+        select count(*) from need
+    </select>
+
+    <!--  需求信息分页查询  -->
+    <select id="getNeedPage" parameterType="com.cdtu.yz.common.PageUtil" resultType="com.cdtu.yz.entity.Need">
+        select * from need limit #{start}, #{pageSize}
+    </select>
+
+    <!--  通过需求名字查询需求的信息  -->
+    <select id="getNeedByTitle" parameterType="java.lang.String" resultType="com.cdtu.yz.entity.Need">
+        select * from need where title= #{title}
+    </select>
+
+    <!--  通过id查询需求的信息  -->
+    <select id="getNeedById" parameterType="java.lang.Integer" resultType="com.cdtu.yz.entity.Need">
+        select * from need where id= #{id}
+    </select>
+
+    <insert id="addNeed" parameterType="com.cdtu.yz.entity.Need">
+        insert into need
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="schoolName != null">
+                schoolName,
+            </if>
+            <if test="urgent != null">
+                urgent,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="reserve != null">
+                reserve,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="schoolName != null">
+                #{schoolName},
+            </if>
+            <if test="urgent != null">
+                #{urgent},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="count != null">
+                #{count},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="reserve != null">
+                #{reserve},
+            </if>
+            <if test="editor != null">
+                #{editor},
+            </if>
+        </trim>
+    </insert>
+
+    <!--  更新需求数据信息  -->
+    <update id="updateNeed" parameterType="com.cdtu.yz.entity.Need">
+        update need set
+        <trim prefix="" suffix="where id = #{id}" suffixOverrides=",">
+
+            <if test="title != null">
+                title=#{title},
+            </if>
+            <if test="schoolName != null">
+                schoolName=#{schoolName},
+            </if>
+
+            <if test="editor != null">
+                editor=#{editor},
+            </if>
+            <if test="urgent != null">
+                urgent=#{urgent},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+
+            <if test="createTime != null">
+                createTime=#{createTime},
+            </if>
+            <if test="editTime != null">
+                editTime=#{editTime},
+            </if>
+            <if test="count != null">
+                count=#{count},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="reserve != null">
+                reserve=#{reserve},
+            </if>
+        </trim>
+
+    </update>
+
+    <!--  修改援藏需求的文章的阅读量  -->
+    <update id="incrementCount" parameterType="java.lang.Integer">
+        update need set count = count + 1 where id = #{id}
+    </update>
+
+    <!--  学校人最新才引进信息  -->
+    <select id="getNeedList" parameterType="int" resultType="com.cdtu.yz.entity.Need">
+        select * from need limit #{count}, 5
+    </select>
+</mapper>
